@@ -3,6 +3,7 @@ import Home from "../screens/home";
 import CreateTransaction from "../screens/createTransaction";
 import { createStackNavigator } from "@react-navigation/stack";
 import CreateCategory from "../screens/createCategory";
+import Transaction from "./Transaction";
 
 const Stack = createStackNavigator();
 
@@ -31,6 +32,14 @@ const StackNavigator = () => {
         options={{
           title: "add Transaction",
           headerStyle: { backgroundColor: "orange" },
+        }}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="Transaction"
+        component={Transaction}
+        options={{
+          title: "add Transaction",
+          headerStyle: { backgroundColor: "#77cc74" },
         }}
       ></Stack.Screen>
     </Stack.Navigator>

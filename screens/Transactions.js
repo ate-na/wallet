@@ -30,12 +30,17 @@ const TransactionList = [
   },
 ];
 
-const Transactions = () => {
+const Transactions = ({ month, onPress }) => {
   let day = null;
+
+  const onPressTransactionItem = (item) => {
+    onPress(item)
+  }
+
   const x = (e) => {
     return (
       <View>
-        <Text style={styles.container}>{`july ${day}`}</Text>
+        <Text style={styles.container}>{`${month} ${day}`}</Text>
         <TransactionItem item={e} />
       </View>
     );
@@ -54,7 +59,7 @@ const Transactions = () => {
       {TransactionList.map((e) =>
         checkDay(e) ? (
           <View>
-            <TransactionItem item={e} />
+            <TransactionItem item={e} onPress={onPressTransactionItem} />
           </View>
         ) : (
           x(e)

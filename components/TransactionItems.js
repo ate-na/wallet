@@ -1,24 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome"; // Replace 'FontAwesome' with the icon library of your choice
 import IconCategory from "./IconCategory";
-import { useEffect, useState } from "react";
 
-const TransactionItem = ({ item }) => {
-  // const [day, setDay] = useState(null);
-  // let content;
-  // useEffect(() => {
-  //   const dayOfItem = new Date(item.date).getDate();
-  //   console.log("dayOfItem", dayOfItem, dayOfItem !== day, day);
-
-  //   if (dayOfItem !== day) {
-  //     setDay(dayOfItem);
-  //     content = <Text>{dayOfItem}</Text>;
-  //     console.log("content", content);
-  //   }
-  // }, [item]);
-
+const TransactionItem = ({ item, onPress }) => {
+  const onPressTransactionItem = () => {
+    onPress(item)
+  }
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPressTransactionItem}>
       <IconCategory name={"gift"} size={20} color={"white"} />
       <View style={styles.category}>
         <Text style={styles.categoryText}>{item.category.name}</Text>
