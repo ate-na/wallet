@@ -1,24 +1,24 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Category from "../components/category";
 import Calculator from "./calculator";
 import CategoryTabItem from "../components/categoryTabItem";
+import CategoryItem from "../components/categoryItem";
 
 const FAKE_DATA = [
-  { name: "Food", id: 1, icon: null, type: "income" },
-  { name: "Hobby", id: 2, icon: null, type: "income" },
-  { name: "Clothes", id: 3, icon: null, type: "income" },
-  { name: "Game", id: 4, icon: null, type: "income" },
-  { name: "Study", id: 5, icon: null, type: "income" },
-  { name: "University", id: 6, icon: null, type: "income" },
-  { name: "Gym", id: 7, icon: null, type: "income" },
-  { name: "Swim", id: 8, icon: null, type: "income" },
-  { name: "Travel", id: 9, icon: null, type: "income" },
-  { name: "gift", id: 11, icon: null, type: "expense" },
-  { name: "work", id: 12, icon: null, type: "expense" },
-  { name: "sell", id: 13, icon: null, type: "expense" },
+  { name: "Food", id: 1, icon: "home", type: "income" },
+  { name: "Hobby", id: 2, icon: "home", type: "income" },
+  { name: "Clothes", id: 3, icon: "home", type: "income" },
+  { name: "Game", id: 4, icon: "home", type: "income" },
+  { name: "Study", id: 5, icon: "home", type: "income" },
+  { name: "University", id: 6, icon: "home", type: "income" },
+  { name: "Gym", id: 7, icon: "home", type: "income" },
+  { name: "Swim", id: 8, icon: "home", type: "income" },
+  { name: "Travel", id: 9, icon: "home", type: "income" },
+  { name: "gift", id: 11, icon: "home", type: "expense" },
+  { name: "work", id: 12, icon: "home", type: "expense" },
+  { name: "sell", id: 13, icon: "home", type: "expense" },
 ];
-
 
 const CreateTransaction = ({ navigation }) => {
   const [actionType, setActionType] = useState("expense");
@@ -40,18 +40,34 @@ const CreateTransaction = ({ navigation }) => {
     setShowCalculator(true);
   };
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({ tabBarVisible: false });
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
       <View style={styles.containerBtn}>
-        <CategoryTabItem isActive={isExpenseTabActive} onActionChange={onActionChange.bind(null, "expense")}>Expense</CategoryTabItem>
-        <CategoryTabItem isActive={isIncomeTabActive} onActionChange={onActionChange.bind(null, "income")}>Income</CategoryTabItem>
+        <CategoryTabItem
+          isActive={isExpenseTabActive}
+          onActionChange={onActionChange.bind(null, "expense")}
+        >
+          Expense
+        </CategoryTabItem>
+        <CategoryTabItem
+          isActive={isIncomeTabActive}
+          onActionChange={onActionChange.bind(null, "income")}
+        >
+          Income
+        </CategoryTabItem>
       </View>
       <View style={styles.container}>
         <Category
           onPress={categoryOnPressHandler}
+          choosen={category}
           categories={FAKE_DATA.filter((e) =>
             isExpenseTabActive ? e.type === "expense" : e.type === "income"
           )}
+          navigation={navigation}
         />
         {showCalculator ? <Calculator onSubmit={onSubmitHandler} /> : null}
       </View>

@@ -22,10 +22,10 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: "30%",
     display: "flex",
-    padding: 15,
+    padding: 13,
     alignContent: "center",
     justifyContent: "center",
-    marginBottom: 13,
+    marginBottom: 1,
   },
   buttonText: {
     textAlign: "center",

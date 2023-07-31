@@ -1,0 +1,18 @@
+ [
+  { "name": "Food", "id": 1, "icon": "home", "type": "income" },
+  { "name": "Hobby", "id": 2, "icon": "home", "type": "income" },
+  { "name": "Clothes", "id": 3, "icon": "home", "type": "income" },
+  { "name": "Game", "id": 4, "icon": "home", "type": "income" },
+  { "name": "Study", "id": 5, "icon": "home", "type": "income" },
+  { "name": "University", "id": 6, "icon": "home", "type": "income" },
+  { "name": "Gym", "id": 7, "icon": "home", "type": "income" },
+  { "name": "Swim", "id": 8, "icon": "home", "type": "income" },
+  { "name": "Travel", "id": 9, "icon": "home", "type": "income" },
+  { "name": "gift", "id": 11, "icon": "home", "type": "expense" },
+  { "name": "work", "id": 12, "icon": "home", "type": "expense" },
+  { "name": "sell", "id": 13, "icon": "home", "type": "expense" },
+  { "name": "add", "id": 14, "icon": "plus", "type": "expense" },
+  { "name": "add", "id": 15, "icon": "plus", "type": "income" }
+]
+
+
