@@ -7,6 +7,7 @@ import Account from "./screens/account";
 import Report from "./screens/Report";
 import StackNavigator from "./components/stackNavigator";
 import Icon from "react-native-vector-icons/FontAwesome"; // Replace 'FontAwesome' with the icon library of your choice
+import { CategoryProvider } from './context/categoryContext'
 
 const Tab = createBottomTabNavigator();
 
@@ -24,38 +25,40 @@ export default function App() {
   };
 
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        sceneContainerStyle={styles.container}
-        screenOptions={{
-          tabBarStyle: { backgroundColor: "#403e3e" },
-          headerStyle: { backgroundColor: "#403e3e" },
-          tabBarActiveTintColor: "#fc7f03",
-          headerTintColor: "#fc7f03",
-        }}
-      >
-        <Tab.Screen
-          name="Home"
-          component={StackNavigator}
-          options={{
-            headerShown: false,
-            tabBarIcon: iconHomeTab,
+    <CategoryProvider>
+      <NavigationContainer>
+        <Tab.Navigator
+          sceneContainerStyle={styles.container}
+          screenOptions={{
+            tabBarStyle: { backgroundColor: "#403e3e" },
+            headerStyle: { backgroundColor: "#403e3e" },
+            tabBarActiveTintColor: "#fc7f03",
+            headerTintColor: "#fc7f03",
           }}
-        />
-        <Tab.Screen
-          name="Report"
-          component={Report}
-          options={{
-            tabBarIcon: iconReportTab,
-          }}
-        />
-        <Tab.Screen
-          name="Account"
-          component={Account}
-          options={{ tabBarIcon: iconAccountTab }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+        >
+          <Tab.Screen
+            name="Home"
+            component={StackNavigator}
+            options={{
+              headerShown: false,
+              tabBarIcon: iconHomeTab,
+            }}
+          />
+          <Tab.Screen
+            name="Report"
+            component={Report}
+            options={{
+              tabBarIcon: iconReportTab,
+            }}
+          />
+          <Tab.Screen
+            name="Account"
+            component={Account}
+            options={{ tabBarIcon: iconAccountTab }}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </CategoryProvider>
   );
 }
 

@@ -1,43 +1,61 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Category from "../components/category";
 import Calculator from "./calculator";
 import CategoryTabItem from "../components/categoryTabItem";
-import CategoryItem from "../components/categoryItem";
+import { useIsFocused } from "@react-navigation/native";
 
-const FAKE_DATA = [
-  { name: "Food", id: 1, icon: "home", type: "income" },
-  { name: "Hobby", id: 2, icon: "home", type: "income" },
-  { name: "Clothes", id: 3, icon: "home", type: "income" },
-  { name: "Game", id: 4, icon: "home", type: "income" },
-  { name: "Study", id: 5, icon: "home", type: "income" },
-  { name: "University", id: 6, icon: "home", type: "income" },
-  { name: "Gym", id: 7, icon: "home", type: "income" },
-  { name: "Swim", id: 8, icon: "home", type: "income" },
-  { name: "Travel", id: 9, icon: "home", type: "income" },
-  { name: "gift", id: 11, icon: "home", type: "expense" },
-  { name: "work", id: 12, icon: "home", type: "expense" },
-  { name: "sell", id: 13, icon: "home", type: "expense" },
-];
-
-const CreateTransaction = ({ navigation }) => {
-  const [actionType, setActionType] = useState("expense");
+const CreateTransaction = ({ route, navigation }) => {
+  const [actionType, setActionType] = useState("Expense");
   const [category, setCategory] = useState({});
   const [showCalculator, setShowCalculator] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const isFocused = useIsFocused()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://192.168.138.71:3000/api/category");
+        const jsonData = await response.json();
+        setCategories(jsonData.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [isFocused]);
 
   const onActionChange = (action) => setActionType(action);
 
-  const isExpenseTabActive = actionType === "expense";
+  const isExpenseTabActive = actionType === "Expense";
 
-  const isIncomeTabActive = actionType === "income";
+  const isIncomeTabActive = actionType === "Income";
 
-  const onSubmitHandler = (value) => {
-    navigation.navigate("Home");
+  const onSubmitHandler = async (value) => {
+
+    if (value && value > 0 && category._id) {
+      const response = await fetch("http://192.168.138.71:3000/api/transaction", {
+        method: "POST",
+        body: JSON.stringify({
+          category: category._id,
+          date: new Date(),
+          money: value,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: 'application/json'
+        },
+      });
+      const res = await response.json()
+      console.log("new Transaction is", res)
+    }
+    navigation.navigate("Home", { money: value, category });
   };
 
-  const categoryOnPressHandler = (item) => {
+  const categoryOnPressHandler = (item, showcalender) => {
     setCategory(item);
-    setShowCalculator(true);
+    setShowCalculator(showcalender);
   };
 
   React.useLayoutEffect(() => {
@@ -49,13 +67,13 @@ const CreateTransaction = ({ navigation }) => {
       <View style={styles.containerBtn}>
         <CategoryTabItem
           isActive={isExpenseTabActive}
-          onActionChange={onActionChange.bind(null, "expense")}
+          onActionChange={onActionChange.bind(null, "Expense")}
         >
           Expense
         </CategoryTabItem>
         <CategoryTabItem
           isActive={isIncomeTabActive}
-          onActionChange={onActionChange.bind(null, "income")}
+          onActionChange={onActionChange.bind(null, "Income")}
         >
           Income
         </CategoryTabItem>
@@ -64,9 +82,11 @@ const CreateTransaction = ({ navigation }) => {
         <Category
           onPress={categoryOnPressHandler}
           choosen={category}
-          categories={FAKE_DATA.filter((e) =>
-            isExpenseTabActive ? e.type === "expense" : e.type === "income"
-          )}
+          categories={
+            categories?.filter((e) =>
+              isExpenseTabActive ? e.type === "Expense" : e.type === "Income"
+            ) || []
+          }
           navigation={navigation}
         />
         {showCalculator ? <Calculator onSubmit={onSubmitHandler} /> : null}

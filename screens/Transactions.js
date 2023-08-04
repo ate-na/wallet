@@ -1,36 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import TransactionItem from "../components/TransactionItems";
-import { useState } from "react";
 
-const TransactionList = [
-  {
-    date: "2023-07-31",
-    money: 10000,
-    category: { name: "sell", icon: "sell", type: "income" },
-  },
-  {
-    date: "2023-07-31",
-    money: -10000,
-    category: { name: "food", icon: "food", type: "Expense" },
-  },
-  {
-    date: "2023-07-30",
-    money: -10000,
-    category: { name: "loan", icon: "loan", type: "Expense" },
-  },
-  {
-    date: "2023-07-30",
-    money: 10000,
-    category: { name: "gift", icon: "gift", type: "Expense" },
-  },
-  {
-    date: "2023-07-28",
-    money: 10000,
-    category: { name: "food", icon: "food", type: "Expense" },
-  },
-];
-
-const Transactions = ({ month, onPress }) => {
+const Transactions = ({ month, onPress, transactions }) => {
   let day = null;
 
   const onPressTransactionItem = (item) => {
@@ -41,7 +12,7 @@ const Transactions = ({ month, onPress }) => {
     return (
       <View>
         <Text style={styles.container}>{`${month} ${day}`}</Text>
-        <TransactionItem item={e} />
+        <TransactionItem item={e} onPress={onPressTransactionItem} key={e.id} />
       </View>
     );
   };
@@ -54,12 +25,13 @@ const Transactions = ({ month, onPress }) => {
     }
     return true;
   };
+
   return (
     <View>
-      {TransactionList.map((e) =>
+      {transactions.map((e) =>
         checkDay(e) ? (
           <View>
-            <TransactionItem item={e} onPress={onPressTransactionItem} />
+            <TransactionItem item={e} onPress={onPressTransactionItem} key={e.id} />
           </View>
         ) : (
           x(e)

@@ -1,8 +1,5 @@
 import {
-  SafeAreaView,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import IconButtonWithPlus from "../components/Button";
@@ -11,9 +8,13 @@ import Header from "../components/Header";
 import Transactions from "./Transactions";
 import { getAllMonthsOfYear } from "../utils/AllMonthOfYear";
 import { useEffect, useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
 
 const Home = ({ navigation }) => {
   const [currentMonthIndex, setCurrentMonthIndex] = useState();
+  const [transactions, setTransactions] = useState([])
+  const isFocused = useIsFocused();
+
 
   const allMonths = getAllMonthsOfYear();
 
@@ -24,8 +25,23 @@ const Home = ({ navigation }) => {
     setCurrentMonthIndex(Index);
   }, []);
 
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://192.168.138.71:3000/api/transaction");
+        const jsonData = await response.json();
+        setTransactions(jsonData.data || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [isFocused]);
+
   const onPressTransactionItem = (item) => {
-    console.log("item", item);
+    navigation.navigate("Transaction", item)
   };
 
   const handleNextMonth = () => {
@@ -52,6 +68,7 @@ const Home = ({ navigation }) => {
         currentMonth={allMonths[currentMonthIndex]}
       />
       <Transactions
+        transactions={transactions}
         month={
           allMonths[currentMonthIndex]?.split(" ")[0]
             ? allMonths[currentMonthIndex]?.split(" ")[0]

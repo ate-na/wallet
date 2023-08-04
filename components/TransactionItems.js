@@ -7,9 +7,9 @@ const TransactionItem = ({ item, onPress }) => {
   }
   return (
     <TouchableOpacity style={styles.container} onPress={onPressTransactionItem}>
-      <IconCategory name={"gift"} size={20} color={"white"} />
+      <IconCategory name={item.category.icon} size={20} color={"white"} />
       <View style={styles.category}>
-        <Text style={styles.categoryText}>{item.category.name}</Text>
+        <Text style={styles.categoryText}>{item.category.title}</Text>
       </View>
       <View style={styles.money}>
         <Text

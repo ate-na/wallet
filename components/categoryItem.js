@@ -8,13 +8,14 @@ const CategoryItem = ({ item, onPress, choosen }) => {
   return (
     <View style={styles.categoryItem}>
       <IconCategory
-        isActive={choosen?.id === item?.id}
+        isActive={choosen?._id === item?._id}
         isTouchable={true}
         onPress={onClickBtnHandler}
-        name={item.icon}
+        name={item?.icon || "question"}
+        color={"white"}
         size={27}
       />
-      <Text style={styles.categoryName}>{item.name}</Text>
+      <Text style={styles.categoryName}>{item.title}</Text>
     </View>
   );
 };

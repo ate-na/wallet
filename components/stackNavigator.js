@@ -4,6 +4,7 @@ import CreateTransaction from "../screens/createTransaction";
 import { createStackNavigator } from "@react-navigation/stack";
 import CreateCategory from "../screens/createCategory";
 import Transaction from "./Transaction";
+import IconList from "./IconLists";
 
 const Stack = createStackNavigator();
 
@@ -40,6 +41,14 @@ const StackNavigator = () => {
         options={{
           title: "add Transaction",
           headerStyle: { backgroundColor: "#77cc74" },
+        }}
+      ></Stack.Screen>
+
+      <Stack.Screen
+        name="Icons"
+        component={IconList}
+        options={{
+          title: "Icons"
         }}
       ></Stack.Screen>
     </Stack.Navigator>

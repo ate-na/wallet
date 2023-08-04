@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,17 +9,47 @@ import {
 import { RadioButton } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import IconCategory from "../components/IconCategory";
+import { useContext } from "react";
 
-const CreateCategory = ({ navigation }) => {
-  const [type, setType] = useState("expense");
-  const [category, setCategory] = useState(null);
+const CreateCategory = ({ route, navigation }) => {
+  const [type, setType] = useState("Expense");
+  const [icon, setIcon] = useState("question");
+  const [category, setCategory] = useState(null)
+
 
   const handleRadioPress = (option) => {
     setType(option);
   };
 
+  const onPress = () => {
+    navigation.navigate('Icons')
+  }
+
+  useEffect(() => {
+    setIcon(route?.params?.item || "question")
+  }, [route?.params])
+
   // Handle form submission here
-  const submitHandlerBtn = () => {
+  const submitHandlerBtn = async () => {
+    try {
+      const response = await fetch('http://192.168.138.71:3000/api/category', {
+        method: 'POST',
+        body: JSON.stringify({
+          title: category,
+          type: type,
+          icon
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: 'application/json'
+        }
+      })
+      const res = await response.json()
+      navigation.navigate("CategoryList", { category: res.data })
+    } catch (error) {
+      console.log("error", error)
+    }
+
     navigation.navigate("CategoryList");
   };
 
@@ -58,10 +88,11 @@ const CreateCategory = ({ navigation }) => {
         <View style={styles.inputContainer}>
           <IconCategory
             isActive={true}
-            name={"question"}
+            name={icon}
             color={"white"}
             size={24}
             isTouchable={true}
+            onPress={onPress}
           />
           <TextInput
             style={styles.input}

@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
+    marginHorizontal: 5
   },
   activeCategory: {
     backgroundColor: "orange",

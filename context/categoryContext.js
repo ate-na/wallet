@@ -1,9 +1,9 @@
 import React, { createContext, useState } from "react";
 
 const categoryContext = createContext({
-  data: [],
-  getCategories: (data) => {},
-  addCategory: (name, type, icon) => {},
+  categories: [],
+  getCategories: (data) => { },
+  addCategory: (item) => { },
 });
 
 export const CategoryProvider = ({ children }) => {
@@ -13,15 +13,18 @@ export const CategoryProvider = ({ children }) => {
     setCategories(data);
   };
 
-  const addCategory = (name, type, icon) => {
+  const addCategory = (item) => {
     setCategories((pre) => [
       ...pre,
-      { name, type, id: Math.floor(Math.random() * 10000), icon },
+      { ...item },
     ]);
   };
   return (
-    <categoryContext.Provider value={(addCategory, categories, getCategories)}>
+    <categoryContext.Provider value={{ addCategory, categories, getCategories }}>
       {children}
     </categoryContext.Provider>
   );
 };
+
+
+export default categoryContext

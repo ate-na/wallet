@@ -1,28 +1,29 @@
 import { View, StyleSheet } from "react-native";
 import CategoryItem from "./categoryItem";
 
-const Category = ({ categories, onPress, choosen, navigation }) => {
+const Category = ({ route, categories, onPress, choosen, navigation }) => {
   const onPresCategoryHandler = (item) => {
-    if (item.name === "add") {
-      navigation.navigate("createCategory");
-    }
-    onPress(item);
+    onPress(item, true);
   };
+  const addCategoryHandler = (item) => {
+    onPress(item, false)
+    navigation.navigate("createCategory");
+  }
 
   return (
     <View style={styles.container}>
       {categories.map((e) => (
         <CategoryItem
           item={e}
-          key={e.id}
+          key={e._id}
           onPress={onPresCategoryHandler}
           choosen={choosen}
         />
       ))}
       <CategoryItem
-        item={{ id: 200, name: "add", icon: "question", type: "add" }}
+        item={{ _id: 200, title: "add", icon: "question", type: "add" }}
         key={200}
-        onPress={onPresCategoryHandler}
+        onPress={addCategoryHandler}
         choosen={choosen}
       />
     </View>
