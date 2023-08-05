@@ -1,10 +1,10 @@
-import { NavigationContainer } from "@react-navigation/native";
 import Home from "../screens/home";
 import CreateTransaction from "../screens/createTransaction";
 import { createStackNavigator } from "@react-navigation/stack";
 import CreateCategory from "../screens/createCategory";
 import Transaction from "./Transaction";
 import IconList from "./IconLists";
+import DropTransactions from "./HeaderTransaction";
 
 const Stack = createStackNavigator();
 
@@ -31,7 +31,7 @@ const StackNavigator = () => {
         name="createCategory"
         component={CreateCategory}
         options={{
-          title: "add Transaction",
+          title: "add Category",
           headerStyle: { backgroundColor: "orange" },
         }}
       ></Stack.Screen>
@@ -39,8 +39,12 @@ const StackNavigator = () => {
         name="Transaction"
         component={Transaction}
         options={{
-          title: "add Transaction",
-          headerStyle: { backgroundColor: "#77cc74" },
+          headerShown: false
+          // title: "Transaction",
+          // header: ({ scene, previous, navigation }) => {
+
+          //   return <DropTransactions title={"Transaction"} getBack={navigation.goBack} />
+          // },
         }}
       ></Stack.Screen>
 

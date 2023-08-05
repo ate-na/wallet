@@ -9,10 +9,12 @@ import Transactions from "./Transactions";
 import { getAllMonthsOfYear } from "../utils/AllMonthOfYear";
 import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
+import TotalMoney from "../components/TotalMoney";
 
 const Home = ({ navigation }) => {
   const [currentMonthIndex, setCurrentMonthIndex] = useState();
   const [transactions, setTransactions] = useState([])
+  const [total, setTotal] = useState(0)
   const isFocused = useIsFocused();
 
 
@@ -25,12 +27,23 @@ const Home = ({ navigation }) => {
     setCurrentMonthIndex(Index);
   }, []);
 
-
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://192.168.138.71:3000/api/transaction/total`);
+        const jsonData = await response.json();
+        setTotal(jsonData.data || 0);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [isFocused])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://192.168.138.71:3000/api/transaction");
+        const response = await fetch(`http://192.168.138.71:3000/api/transaction?year=${allMonths[currentMonthIndex]?.split(' ')[1]}&month=${allMonths[currentMonthIndex]?.split(' ')[0]}`);
         const jsonData = await response.json();
         setTransactions(jsonData.data || []);
       } catch (error) {
@@ -38,7 +51,7 @@ const Home = ({ navigation }) => {
       }
     };
     fetchData();
-  }, [isFocused]);
+  }, [isFocused, currentMonthIndex]);
 
   const onPressTransactionItem = (item) => {
     navigation.navigate("Transaction", item)
@@ -58,7 +71,7 @@ const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Header greeting={"Good Morning"} name={"Guest"} />
+        <Header greeting={"Good Morning"} name={"Guest"} total={total} />
       </View>
       <MonthList
         onPressNextMonth={handleNextMonth}
@@ -85,7 +98,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 35,
-    backgroundColor: "#555",
+    backgroundColor: "#333",
     // alignItems: "center",
     // justifyContent: "center",
   },
