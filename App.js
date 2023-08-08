@@ -34,40 +34,36 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      {!token ? (
-        <Tab.Navigator
-          sceneContainerStyle={styles.container}
-          screenOptions={{
-            tabBarStyle: { backgroundColor: "#403e3e" },
-            headerStyle: { backgroundColor: "#403e3e" },
-            tabBarActiveTintColor: "#fc7f03",
-            headerTintColor: "#fc7f03",
+      <Tab.Navigator
+        sceneContainerStyle={styles.container}
+        screenOptions={{
+          tabBarStyle: { backgroundColor: "#403e3e" },
+          headerStyle: { backgroundColor: "#403e3e" },
+          tabBarActiveTintColor: "#fc7f03",
+          headerTintColor: "#fc7f03",
+        }}
+      >
+        <Tab.Screen
+          name="Home"
+          component={StackNavigator}
+          options={{
+            headerShown: false,
+            tabBarIcon: iconHomeTab,
           }}
-        >
-          <Tab.Screen
-            name="Home"
-            component={StackNavigator}
-            options={{
-              headerShown: false,
-              tabBarIcon: iconHomeTab,
-            }}
-          />
-          <Tab.Screen
-            name="Report"
-            component={Report}
-            options={{
-              tabBarIcon: iconReportTab,
-            }}
-          />
-          <Tab.Screen
-            name="Account"
-            component={Account}
-            options={{ tabBarIcon: iconAccountTab, headerShown: false }}
-          />
-        </Tab.Navigator>
-      ) : (
-        <StackNavigator />
-      )}
+        />
+        <Tab.Screen
+          name="Report"
+          component={Report}
+          options={{
+            tabBarIcon: iconReportTab,
+          }}
+        />
+        <Tab.Screen
+          name="Account"
+          component={Account}
+          options={{ tabBarIcon: iconAccountTab, headerShown: false }}
+        />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }

@@ -10,7 +10,7 @@ const Account = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={{ fontSize: 30, color: "purple", fontWeight: "bold" }}>
+        <Text style={{ fontSize: 30, color: "orange", fontWeight: "bold" }}>
           Account
         </Text>
         <View
@@ -32,7 +32,7 @@ const Account = () => {
         </View>
       </View>
       <View style={styles.header}>
-        <Text style={{ fontSize: 20, color: "purple", fontWeight: "bold" }}>
+        <Text style={{ fontSize: 20, color: "orange", fontWeight: "bold" }}>
           General
         </Text>
         <TouchableOpacity
@@ -46,7 +46,7 @@ const Account = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.header}>
-        <Text style={{ fontSize: 20, color: "purple", fontWeight: "bold" }}>
+        <Text style={{ fontSize: 20, color: "orange", fontWeight: "bold" }}>
           Security
         </Text>
         <TouchableOpacity style={{ paddingVertical: 15 }}>
@@ -56,7 +56,7 @@ const Account = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.header}>
-        <Text style={{ fontSize: 20, color: "purple", fontWeight: "bold" }}>
+        <Text style={{ fontSize: 20, color: "orange", fontWeight: "bold" }}>
           About
         </Text>
         <View style={{ display: "flex", flexDirection: "row" }}>
@@ -76,7 +76,7 @@ const Account = () => {
         </View>
       </View>
       <View style={styles.header}>
-        <Text style={{ fontSize: 20, color: "purple", fontWeight: "bold" }}>
+        <Text style={{ fontSize: 20, color: "orange", fontWeight: "bold" }}>
           Other
         </Text>
         <View
