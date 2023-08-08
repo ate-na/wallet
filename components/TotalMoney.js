@@ -20,7 +20,6 @@ export default TotalMoney;
 const styles = StyleSheet.create({
     container: {
         width: "90%",
-        height: 150,
         backgroundColor: "#de7812",
         display: "flex",
         flexDirection: "column",

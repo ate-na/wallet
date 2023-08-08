@@ -7,11 +7,19 @@ import Account from "./screens/account";
 import Report from "./screens/Report";
 import StackNavigator from "./components/stackNavigator";
 import Icon from "react-native-vector-icons/FontAwesome"; // Replace 'FontAwesome' with the icon library of your choice
-import { CategoryProvider } from './context/categoryContext'
+import { CategoryProvider } from "./context/tokenContext";
+import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import SigninScreen from "./screens/SigninScreen";
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const token = AsyncStorage.getItem("token");
+  console.log("token", token);
+  AsyncStorage.clear();
+  console.log("token", token);
+
   const iconHomeTab = (name) => {
     return <Icon name="exchange" size={name.size} color={name.color} />;
   };
@@ -25,8 +33,8 @@ export default function App() {
   };
 
   return (
-    <CategoryProvider>
-      <NavigationContainer>
+    <NavigationContainer>
+      {!token ? (
         <Tab.Navigator
           sceneContainerStyle={styles.container}
           screenOptions={{
@@ -54,11 +62,13 @@ export default function App() {
           <Tab.Screen
             name="Account"
             component={Account}
-            options={{ tabBarIcon: iconAccountTab }}
+            options={{ tabBarIcon: iconAccountTab, headerShown: false }}
           />
         </Tab.Navigator>
-      </NavigationContainer>
-    </CategoryProvider>
+      ) : (
+        <StackNavigator />
+      )}
+    </NavigationContainer>
   );
 }
 

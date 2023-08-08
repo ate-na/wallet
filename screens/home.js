@@ -9,7 +9,10 @@ import Transactions from "./Transactions";
 import { getAllMonthsOfYear } from "../utils/AllMonthOfYear";
 import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
+import { ScrollView } from "react-native-gesture-handler";
+import { Animated } from "react-native";
 import TotalMoney from "../components/TotalMoney";
+
 
 const Home = ({ navigation }) => {
   const [currentMonthIndex, setCurrentMonthIndex] = useState();
@@ -53,6 +56,14 @@ const Home = ({ navigation }) => {
     fetchData();
   }, [isFocused, currentMonthIndex]);
 
+  const scrollY = new Animated.Value(0);
+
+  const monthListHeight = scrollY.interpolate({
+    inputRange: [0, 10], // Adjust the values based on your preference.
+    outputRange: [150, 100], // Adjust the heights as needed
+    extrapolate: "clamp",
+  });
+
   const onPressTransactionItem = (item) => {
     navigation.navigate("Transaction", item)
   };
@@ -72,23 +83,33 @@ const Home = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Header greeting={"Good Morning"} name={"Guest"} total={total} />
+        <View style={{
+          paddingTop: 10,
+          flexDirection: "row",
+          display: "flex",
+          justifyContent: "center",
+        }}>
+          <TotalMoney money={total} />
+        </View>
+        <MonthList
+          onPressNextMonth={handleNextMonth}
+          onPressPreviousMonth={handlePreviousMonth}
+          previousMonth={allMonths[currentMonthIndex + 1]}
+          nextMonth={allMonths[currentMonthIndex - 1]}
+          currentMonth={allMonths[currentMonthIndex]}
+        />
       </View>
-      <MonthList
-        onPressNextMonth={handleNextMonth}
-        onPressPreviousMonth={handlePreviousMonth}
-        previousMonth={allMonths[currentMonthIndex + 1]}
-        nextMonth={allMonths[currentMonthIndex - 1]}
-        currentMonth={allMonths[currentMonthIndex]}
-      />
-      <Transactions
-        transactions={transactions}
-        month={
-          allMonths[currentMonthIndex]?.split(" ")[0]
-            ? allMonths[currentMonthIndex]?.split(" ")[0]
-            : new Date().toLocaleString("en-us", { month: "long" })
-        }
-        onPress={onPressTransactionItem}
-      />
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <Transactions
+          transactions={transactions}
+          month={
+            allMonths[currentMonthIndex]?.split(" ")[0]
+              ? allMonths[currentMonthIndex]?.split(" ")[0]
+              : new Date().toLocaleString("en-us", { month: "long" })
+          }
+          onPress={onPressTransactionItem}
+        />
+      </ScrollView>
       <IconButtonWithPlus onPress={handlePressBtn} />
     </View>
   );
@@ -99,8 +120,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 35,
     backgroundColor: "#333",
-    // alignItems: "center",
-    // justifyContent: "center",
+
   },
   header: {},
 });

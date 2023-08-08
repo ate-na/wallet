@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Category from "../components/category";
-import Calculator from "./calculator";
+import Calculator from "../components/calculator";
 import CategoryTabItem from "../components/categoryTabItem";
 import { useIsFocused } from "@react-navigation/native";
 
@@ -48,7 +48,6 @@ const CreateTransaction = ({ route, navigation }) => {
         },
       });
       const res = await response.json()
-      console.log("new Transaction is", res)
     }
     navigation.navigate("Home", { money: value, category });
   };

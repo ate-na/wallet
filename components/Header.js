@@ -25,9 +25,7 @@ const Header = ({ name, greeting, total }) => {
           <Text style={styles.userName}>{name}</Text>
         </View>
       </View>
-      <View style={styles.total}>
-        <TotalMoney money={total} />
-      </View>
+
     </View>
   );
 };

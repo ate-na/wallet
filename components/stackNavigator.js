@@ -4,13 +4,15 @@ import { createStackNavigator } from "@react-navigation/stack";
 import CreateCategory from "../screens/createCategory";
 import Transaction from "./Transaction";
 import IconList from "./IconLists";
-import DropTransactions from "./HeaderTransaction";
+import SigninScreen from "../screens/SigninScreen";
+import SignupScreen from "../screens/SignupScreen";
+import App from "../App";
 
 const Stack = createStackNavigator();
 
 const StackNavigator = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="signin">
       <Stack.Screen
         name="Home"
         component={Home}
@@ -39,7 +41,7 @@ const StackNavigator = () => {
         name="Transaction"
         component={Transaction}
         options={{
-          headerShown: false
+          headerShown: false,
           // title: "Transaction",
           // header: ({ scene, previous, navigation }) => {
 
@@ -52,9 +54,24 @@ const StackNavigator = () => {
         name="Icons"
         component={IconList}
         options={{
-          title: "Icons"
+          title: "Icons",
         }}
       ></Stack.Screen>
+      <Stack.Screen
+        name="signin"
+        component={SigninScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="signup"
+        component={SignupScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="app"
+        component={App}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };

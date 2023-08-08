@@ -31,7 +31,7 @@ const Transactions = ({ month, onPress, transactions }) => {
       {transactions.map((e) =>
         checkDay(e) ? (
           <View>
-            <TransactionItem item={e} onPress={onPressTransactionItem} key={e.id} />
+            <TransactionItem item={e} onPress={onPressTransactionItem} key={e._id} />
           </View>
         ) : (
           x(e)

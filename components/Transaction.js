@@ -3,7 +3,6 @@ import Icon from "react-native-vector-icons/FontAwesome"; // Replace 'FontAwesom
 import HeaderTransaction from "./HeaderTransaction";
 
 const Transaction = ({ route, navigation }) => {
-    console.log("route", route.params)
     const transaction = route.params
     return <View style={{ flex: 1 }}>
         <HeaderTransaction title={"Transaction"} getBack={navigation.goBack} item={transaction} />
