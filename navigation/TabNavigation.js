@@ -1,0 +1,64 @@
+import Icon from "react-native-vector-icons/FontAwesome";
+import Report from "../screens/Report";
+import Account from "../screens/account";
+import Home from "../screens/home";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { StyleSheet } from "react-native";
+
+const Tab = createBottomTabNavigator();
+
+const TabNavigation = () => {
+  const iconHomeTab = (name) => {
+    return <Icon name="exchange" size={name.size} color={name.color} />;
+  };
+
+  const iconAccountTab = (name) => {
+    return <Icon name="user" size={name.size} color={name.color} />;
+  };
+
+  const iconReportTab = (name) => {
+    return <Icon name="pie-chart" size={name.size} color={name.color} />;
+  };
+  return (
+    <Tab.Navigator
+      sceneContainerStyle={styles.container}
+      screenOptions={{
+        tabBarStyle: { backgroundColor: "#403e3e" },
+        headerStyle: { backgroundColor: "#403e3e" },
+        tabBarActiveTintColor: "#fc7f03",
+        headerTintColor: "#fc7f03",
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          headerShown: false,
+          tabBarIcon: iconHomeTab,
+        }}
+      />
+      <Tab.Screen
+        name="Report"
+        component={Report}
+        options={{
+          tabBarIcon: iconReportTab,
+        }}
+      />
+      <Tab.Screen
+        name="Account"
+        component={Account}
+        options={{ tabBarIcon: iconAccountTab, headerShown: false }}
+      />
+    </Tab.Navigator>
+  );
+};
+export default TabNavigation;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    // backgroundColor: "red",
+  },
+});

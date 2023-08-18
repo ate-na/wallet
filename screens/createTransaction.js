@@ -4,18 +4,19 @@ import Category from "../components/category";
 import Calculator from "../components/calculator";
 import CategoryTabItem from "../components/categoryTabItem";
 import { useIsFocused } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CreateTransaction = ({ route, navigation }) => {
   const [actionType, setActionType] = useState("Expense");
   const [category, setCategory] = useState({});
   const [showCalculator, setShowCalculator] = useState(false);
   const [categories, setCategories] = useState([]);
-  const isFocused = useIsFocused()
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://192.168.138.71:3000/api/category");
+        const response = await fetch("http://192.168.40.71:3000/api/category");
         const jsonData = await response.json();
         setCategories(jsonData.data);
       } catch (error) {
@@ -33,21 +34,25 @@ const CreateTransaction = ({ route, navigation }) => {
   const isIncomeTabActive = actionType === "Income";
 
   const onSubmitHandler = async (value) => {
-
     if (value && value > 0 && category._id) {
-      const response = await fetch("http://192.168.138.71:3000/api/transaction", {
-        method: "POST",
-        body: JSON.stringify({
-          category: category._id,
-          date: new Date(),
-          money: value,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Accept: 'application/json'
-        },
-      });
-      const res = await response.json()
+      const token = AsyncStorage.getItem("token");
+      const response = await fetch(
+        "http://192.168.40.71:3000/api/transaction",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            category: category._id,
+            date: new Date(),
+            money: value,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const res = await response.json();
     }
     navigation.navigate("Home", { money: value, category });
   };

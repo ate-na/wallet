@@ -1,10 +1,18 @@
 import { StyleSheet, Text } from "react-native";
 import { View, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Account = () => {
+const Account = ({ navigation }) => {
+  const user = AsyncStorage.getItem("token");
+
   const onPresCategoriesHandler = () => {
     console.log("onclick");
+  };
+
+  const logOutHandler = () => {
+    AsyncStorage.removeItem("token");
+    navigation.navigate("signin");
   };
 
   return (
@@ -23,10 +31,10 @@ const Account = () => {
           <Icon name="user-circle" size={50} color="white" />
           <View style={{ paddingHorizontal: 20 }}>
             <Text style={{ fontWeight: "bold", color: "white", fontSize: 18 }}>
-              Atena Bagheri
+              {user?.name}
             </Text>
             <Text style={{ color: "#858c87", fontSize: 15 }}>
-              atenab627@gmail.com
+              {user?.email}
             </Text>
           </View>
         </View>
@@ -83,9 +91,13 @@ const Account = () => {
           style={{ display: "flex", flexDirection: "row", paddingVertical: 10 }}
         >
           <Icon name="sign-out" size={20} color={"white"} />
-          <Text style={{ color: "white", fontSize: 15, marginHorizontal: 20 }}>
-            LogOut
-          </Text>
+          <TouchableOpacity onPress={logOutHandler}>
+            <Text
+              style={{ color: "white", fontSize: 15, marginHorizontal: 20 }}
+            >
+              LogOut
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

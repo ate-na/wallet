@@ -34,9 +34,19 @@ const Report = () => {
   useEffect(() => {
     const fetchData = async (param) => {
       try {
+        const token = AsyncStorage.getItem("token");
         const response = await fetch(
-          `http://192.168.138.71:3000/api/transaction/chart/${param}?year=${allMonths[currentMonthIndex]?.split(" ")[1]
-          }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`
+          `http://192.168.40.71:3000/api/transaction/chart/${param}?year=${
+            allMonths[currentMonthIndex]?.split(" ")[1]
+          }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const jsonData = await response.json();
         if (param === "Expense") {
@@ -51,9 +61,19 @@ const Report = () => {
 
     const fetchTotal = async () => {
       try {
+        const token = AsyncStorage.getItem("token");
         const response = await fetch(
-          `http://192.168.138.71:3000/api/transaction/total/report?year=${allMonths[currentMonthIndex]?.split(" ")[1]
-          }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`
+          `http://192.168.40.71:3000/api/transaction/total/report?year=${
+            allMonths[currentMonthIndex]?.split(" ")[1]
+          }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const jsonData = await response.json();
         setTotalReport(jsonData.data || []);
