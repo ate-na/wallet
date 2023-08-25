@@ -35,7 +35,8 @@ const Report = () => {
     const fetchData = async (param) => {
       try {
         const response = await fetch(
-          `http://192.168.138.71:3000/api/transaction/chart/${param}?year=${allMonths[currentMonthIndex]?.split(" ")[1]
+          `http://192.168.21.71:3000/api/transaction/chart/${param}?year=${
+            allMonths[currentMonthIndex]?.split(" ")[1]
           }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`
         );
         const jsonData = await response.json();
@@ -52,7 +53,8 @@ const Report = () => {
     const fetchTotal = async () => {
       try {
         const response = await fetch(
-          `http://192.168.138.71:3000/api/transaction/total/report?year=${allMonths[currentMonthIndex]?.split(" ")[1]
+          `http://192.168.21.71:3000/api/transaction/total/report?year=${
+            allMonths[currentMonthIndex]?.split(" ")[1]
           }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`
         );
         const jsonData = await response.json();
@@ -78,11 +80,11 @@ const Report = () => {
       <View style={styles.totalReport}>
         <TotalReport
           title={totalReport[0]?.type || "Expense"}
-          amount={totalReport[0]?.amount * -1 || 0}
+          amount={totalReport[0]?.amount || 0}
         />
         <TotalReport
           title={totalReport[1]?.type || "Income"}
-          amount={totalReport[1]?.amount || 0}
+          amount={totalReport[1]?.amount * -1 || 0}
         />
       </View>
       <View style={styles.pieChart}>

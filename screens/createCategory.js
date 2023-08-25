@@ -14,40 +14,39 @@ import { useContext } from "react";
 const CreateCategory = ({ route, navigation }) => {
   const [type, setType] = useState("Expense");
   const [icon, setIcon] = useState("question");
-  const [category, setCategory] = useState(null)
-
+  const [category, setCategory] = useState(null);
 
   const handleRadioPress = (option) => {
     setType(option);
   };
 
   const onPress = () => {
-    navigation.navigate('Icons')
-  }
+    navigation.navigate("Icons");
+  };
 
   useEffect(() => {
-    setIcon(route?.params?.item || "question")
-  }, [route?.params])
+    setIcon(route?.params?.item || "question");
+  }, [route?.params]);
 
   // Handle form submission here
   const submitHandlerBtn = async () => {
     try {
-      const response = await fetch('http://192.168.138.71:3000/api/category', {
-        method: 'POST',
+      const response = await fetch("http://192.168.21.71:3000/api/category", {
+        method: "POST",
         body: JSON.stringify({
           title: category,
           type: type,
-          icon
+          icon,
         }),
         headers: {
           "Content-Type": "application/json",
-          Accept: 'application/json'
-        }
-      })
-      const res = await response.json()
-      navigation.navigate("CategoryList", { category: res.data })
+          Accept: "application/json",
+        },
+      });
+      const res = await response.json();
+      navigation.navigate("CategoryList", { category: res.data });
     } catch (error) {
-      console.log("error", error)
+      console.log("error", error);
     }
 
     navigation.navigate("CategoryList");

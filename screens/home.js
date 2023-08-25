@@ -1,7 +1,4 @@
-import {
-  StyleSheet,
-  View,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 import IconButtonWithPlus from "../components/Button";
 import MonthList from "../components/MonthList";
 import Header from "../components/Header";
@@ -13,13 +10,11 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Animated } from "react-native";
 import TotalMoney from "../components/TotalMoney";
 
-
 const Home = ({ navigation }) => {
   const [currentMonthIndex, setCurrentMonthIndex] = useState();
-  const [transactions, setTransactions] = useState([])
-  const [total, setTotal] = useState(0)
+  const [transactions, setTransactions] = useState([]);
+  const [total, setTotal] = useState(0);
   const isFocused = useIsFocused();
-
 
   const allMonths = getAllMonthsOfYear();
 
@@ -33,7 +28,9 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://192.168.138.71:3000/api/transaction/total`);
+        const response = await fetch(
+          `http://192.168.21.71:3000/api/transaction/total`
+        );
         const jsonData = await response.json();
         setTotal(jsonData.data || 0);
       } catch (error) {
@@ -41,12 +38,16 @@ const Home = ({ navigation }) => {
       }
     };
     fetchData();
-  }, [isFocused])
+  }, [isFocused]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://192.168.138.71:3000/api/transaction?year=${allMonths[currentMonthIndex]?.split(' ')[1]}&month=${allMonths[currentMonthIndex]?.split(' ')[0]}`);
+        const response = await fetch(
+          `http://192.168.21.71:3000/api/transaction?year=${
+            allMonths[currentMonthIndex]?.split(" ")[1]
+          }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`
+        );
         const jsonData = await response.json();
         setTransactions(jsonData.data || []);
       } catch (error) {
@@ -65,7 +66,7 @@ const Home = ({ navigation }) => {
   });
 
   const onPressTransactionItem = (item) => {
-    navigation.navigate("Transaction", item)
+    navigation.navigate("Transaction", item);
   };
 
   const handleNextMonth = () => {
@@ -83,12 +84,14 @@ const Home = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Header greeting={"Good Morning"} name={"Guest"} total={total} />
-        <View style={{
-          paddingTop: 10,
-          flexDirection: "row",
-          display: "flex",
-          justifyContent: "center",
-        }}>
+        <View
+          style={{
+            paddingTop: 10,
+            flexDirection: "row",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <TotalMoney money={total} />
         </View>
         <MonthList
@@ -120,7 +123,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 35,
     backgroundColor: "#333",
-
   },
   header: {},
 });
