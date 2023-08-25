@@ -6,6 +6,8 @@ import { StyleSheet } from "react-native";
 import MonthList from "../components/MonthList";
 import { getAllMonthsOfYear } from "../utils/AllMonthOfYear";
 import TotalReport from "../components/totalReport";
+import { api } from "../constants";
+import { getTokenData } from "../services/tokenService";
 
 const Report = () => {
   const [currentMonthIndex, setCurrentMonthIndex] = useState();
@@ -34,9 +36,9 @@ const Report = () => {
   useEffect(() => {
     const fetchData = async (param) => {
       try {
-        const token = AsyncStorage.getItem("token");
+        const token = await getTokenData();
         const response = await fetch(
-          `http://192.168.40.71:3000/api/transaction/chart/${param}?year=${
+          `http://${api}:3000/api/transaction/chart/${param}?year=${
             allMonths[currentMonthIndex]?.split(" ")[1]
           }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
           {
@@ -61,9 +63,9 @@ const Report = () => {
 
     const fetchTotal = async () => {
       try {
-        const token = AsyncStorage.getItem("token");
+        const token = await getTokenData();
         const response = await fetch(
-          `http://192.168.40.71:3000/api/transaction/total/report?year=${
+          `http://${api}:3000/api/transaction/total/report?year=${
             allMonths[currentMonthIndex]?.split(" ")[1]
           }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
           {

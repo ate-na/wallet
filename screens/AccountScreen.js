@@ -1,22 +1,55 @@
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, Modal } from "react-native";
 import { View, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { clearData, getUserData } from "../services/tokenService";
+import { useEffect, useState } from "react";
+import ChangePassword from "../components/ChanePassword";
+import ModalPage from "../components/Modal";
 
 const Account = ({ navigation }) => {
-  const user = AsyncStorage.getItem("token");
+  const [user, setUser] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const user = await getUserData();
+      setUser(user);
+    };
+    getUser().then();
+  }, [user]);
 
   const onPresCategoriesHandler = () => {
     console.log("onclick");
+    navigation.navigate("CategoryPage", { isEdit: true });
   };
 
   const logOutHandler = () => {
-    AsyncStorage.removeItem("token");
+    clearData();
     navigation.navigate("signin");
   };
 
   return (
     <View style={styles.container}>
+      {/* <Modal
+        visible={modalVisible}
+        animationType="slide"
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}
+      > */}
+      {/* <View style={{ flex: 0.5 }}>
+          <View>
+            <Text>Hello World!</Text>
+            <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+              <Text>Hide Modal</Text>
+            </TouchableOpacity>
+          </View>
+        </View> */}
+      {/* <View>
+          <Text>Hello</Text>
+        </View> */}
+      {/* </Modal> */}
       <View style={styles.header}>
         <Text style={{ fontSize: 30, color: "orange", fontWeight: "bold" }}>
           Account
@@ -57,7 +90,12 @@ const Account = ({ navigation }) => {
         <Text style={{ fontSize: 20, color: "orange", fontWeight: "bold" }}>
           Security
         </Text>
-        <TouchableOpacity style={{ paddingVertical: 15 }}>
+        <TouchableOpacity
+          style={{ paddingVertical: 15 }}
+          onPress={() => {
+            setModalVisible(true);
+          }}
+        >
           <Text style={{ color: "white", fontSize: 15, marginHorizontal: 20 }}>
             Change Password
           </Text>
@@ -68,7 +106,9 @@ const Account = ({ navigation }) => {
           About
         </Text>
         <View style={{ display: "flex", flexDirection: "row" }}>
-          <Icon name="tag" color={"white"} size={25} />
+          <View style={{ paddingVertical: 15 }}>
+            <Icon name="tag" color={"white"} size={25} />
+          </View>
           <View style={{ paddingVertical: 15 }}>
             <Text
               style={{ color: "white", fontSize: 15, marginHorizontal: 20 }}
@@ -87,19 +127,54 @@ const Account = ({ navigation }) => {
         <Text style={{ fontSize: 20, color: "orange", fontWeight: "bold" }}>
           Other
         </Text>
-        <View
-          style={{ display: "flex", flexDirection: "row", paddingVertical: 10 }}
-        >
-          <Icon name="sign-out" size={20} color={"white"} />
-          <TouchableOpacity onPress={logOutHandler}>
+        <TouchableOpacity onPress={logOutHandler}>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              paddingVertical: 10,
+            }}
+          >
+            <Icon name="sign-out" size={20} color={"white"} />
             <Text
               style={{ color: "white", fontSize: 15, marginHorizontal: 20 }}
             >
               LogOut
             </Text>
-          </TouchableOpacity>
-        </View>
+          </View>
+        </TouchableOpacity>
       </View>
+
+      {/* <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <ChangePassword
+              closeModal={() => {
+                setModalVisible(false);
+              }}
+            />
+          </View>
+        </View>
+      </Modal> */}
+      <ModalPage
+        visible={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+        }}
+      >
+        <ChangePassword
+          closeModal={() => {
+            setModalVisible(false);
+          }}
+        />
+      </ModalPage>
     </View>
   );
 };
@@ -116,5 +191,11 @@ const styles = StyleSheet.create({
   },
   header: {
     marginVertical: 10,
+  },
+
+  openButton: {
+    padding: 10,
+    backgroundColor: "#3498db",
+    borderRadius: 5,
   },
 });

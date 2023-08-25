@@ -3,13 +3,15 @@ import { Text } from "react-native";
 import { View } from "react-native";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome"; // Replace 'FontAwesome' with the icon library of your choice
+import { getTokenData } from "../services/tokenService";
+import { api } from "../constants";
 
 const HeaderTransaction = ({ title, getBack, item }) => {
   const deleteTransaction = async () => {
     try {
-      const token = AsyncStorage.getItem("token");
+      const token = await getTokenData();
       const response = await fetch(
-        `http://192.168.40.71:3000/api/transaction/${item._id}`,
+        `http://${api}:3000/api/transaction/${item._id}`,
         {
           method: "DELETE",
           headers: {

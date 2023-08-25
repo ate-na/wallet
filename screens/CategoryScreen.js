@@ -1,24 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import Category from "../components/category";
-import Calculator from "../components/calculator";
+import { StyleSheet, View } from "react-native";
 import CategoryTabItem from "../components/categoryTabItem";
+import Category from "../components/Category";
+import { useEffect, useState } from "react";
+import { api } from "../constants";
 import { useIsFocused } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const CreateTransaction = ({ route, navigation }) => {
+const CategoryPage = ({ route, navigation, setShowCaculatorHandler }) => {
   const [actionType, setActionType] = useState("Expense");
-  const [category, setCategory] = useState({});
-  const [showCalculator, setShowCalculator] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [isEdit, setIsEdit] = useState(false);
+  const [category, setCategory] = useState();
   const isFocused = useIsFocused();
+
+  const onActionChange = (action) => setActionType(action);
+
+  const categoryOnPressHandler = (item, showCalculator) => {
+    console.log("categoryOnPressHandler", item, showCalculator);
+    setCategory(item);
+    if (!isEdit) {
+      setShowCaculatorHandler(showCalculator);
+    }
+    // setShowHandler(showCalculator);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://192.168.40.71:3000/api/category");
+        console.log("paramsss", route.params.isEdit);
+        const response = await fetch(`http://${api}:3000/api/category`);
         const jsonData = await response.json();
         setCategories(jsonData.data);
+        setIsEdit(route.params.isEdit);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -27,45 +39,9 @@ const CreateTransaction = ({ route, navigation }) => {
     fetchData();
   }, [isFocused]);
 
-  const onActionChange = (action) => setActionType(action);
-
   const isExpenseTabActive = actionType === "Expense";
 
   const isIncomeTabActive = actionType === "Income";
-
-  const onSubmitHandler = async (value) => {
-    if (value && value > 0 && category._id) {
-      const token = AsyncStorage.getItem("token");
-      const response = await fetch(
-        "http://192.168.40.71:3000/api/transaction",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            category: category._id,
-            date: new Date(),
-            money: value,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const res = await response.json();
-    }
-    navigation.navigate("Home", { money: value, category });
-  };
-
-  const categoryOnPressHandler = (item, showcalender) => {
-    setCategory(item);
-    setShowCalculator(showcalender);
-  };
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({ tabBarVisible: false });
-  }, [navigation]);
-
   return (
     <View style={styles.container}>
       <View style={styles.containerBtn}>
@@ -85,6 +61,7 @@ const CreateTransaction = ({ route, navigation }) => {
       <View style={styles.container}>
         <Category
           onPress={categoryOnPressHandler}
+          isEdit={isEdit}
           choosen={category}
           categories={
             categories?.filter((e) =>
@@ -93,14 +70,12 @@ const CreateTransaction = ({ route, navigation }) => {
           }
           navigation={navigation}
         />
-        {showCalculator ? <Calculator onSubmit={onSubmitHandler} /> : null}
       </View>
     </View>
   );
 };
 
-export default CreateTransaction;
-
+export default CategoryPage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,

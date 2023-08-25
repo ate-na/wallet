@@ -1,18 +1,22 @@
 import { StyleSheet, Text, View } from "react-native";
-import TransactionItem from "../components/TransactionItems";
+import TransactionItem from "./TransactionItems";
 
 const Transactions = ({ month, onPress, transactions }) => {
   let day = null;
 
   const onPressTransactionItem = (item) => {
-    onPress(item)
-  }
+    onPress(item);
+  };
 
   const x = (e) => {
     return (
       <View>
         <Text style={styles.container}>{`${month} ${day}`}</Text>
-        <TransactionItem item={e} onPress={onPressTransactionItem} key={e._id} />
+        <TransactionItem
+          item={e}
+          onPress={onPressTransactionItem}
+          key={e._id}
+        />
       </View>
     );
   };
@@ -31,7 +35,11 @@ const Transactions = ({ month, onPress, transactions }) => {
       {transactions.map((e) =>
         checkDay(e) ? (
           <View>
-            <TransactionItem item={e} onPress={onPressTransactionItem} key={e._id} />
+            <TransactionItem
+              item={e}
+              onPress={onPressTransactionItem}
+              key={e._id}
+            />
           </View>
         ) : (
           x(e)

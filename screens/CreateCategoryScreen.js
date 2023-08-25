@@ -7,49 +7,83 @@ import {
   StyleSheet,
 } from "react-native";
 import { RadioButton } from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome";
 import IconCategory from "../components/IconCategory";
-import { useContext } from "react";
+import { api } from "../constants";
 
 const CreateCategory = ({ route, navigation }) => {
   const [type, setType] = useState("Expense");
   const [icon, setIcon] = useState("question");
   const [category, setCategory] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
 
   const handleRadioPress = (option) => {
     setType(option);
   };
 
   const onPress = () => {
-    navigation.navigate("Icons");
+    navigation.navigate(
+      "Icons",
+      route.params.category ? { category: route.params.category } : {}
+    );
   };
 
   useEffect(() => {
-    setIcon(route?.params?.item || "question");
+    console.log("paramsss", route?.params);
+    setCategory(route?.params?.category || null);
+    if (route?.params?.category) {
+      setIsEdit(true);
+      setType(route?.params?.category?.type);
+      setCategory(route?.params?.category?.title);
+    }
+    console.log("route?.params?.item", route?.params?.item);
+    setIcon(
+      route?.params?.item?.item || route?.params?.category?.icon || "question"
+    );
   }, [route?.params]);
 
   // Handle form submission here
   const submitHandlerBtn = async () => {
+    let response;
     try {
-      const response = await fetch("http://192.168.40.71:3000/api/category", {
-        method: "POST",
-        body: JSON.stringify({
-          title: category,
-          type: type,
-          icon,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      });
+      if (isEdit) {
+        response = await fetch(
+          `http://${api}:3000/api/category/${route.params.category._id}`,
+          {
+            method: "PATCH",
+            body: JSON.stringify({
+              title: category,
+              type: type,
+              icon,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        );
+      } else {
+        response = await fetch(`http://${api}:3000/api/category`, {
+          method: "POST",
+          body: JSON.stringify({
+            title: category,
+            type: type,
+            icon,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
+      }
       const res = await response.json();
-      navigation.navigate("CategoryList", { category: res.data });
+
+      navigation.navigate(!isEdit ? "CategoryList" : "CategoryPage", {
+        category: res.data,
+        isEdit,
+      });
     } catch (error) {
       console.log("error", error);
     }
-
-    navigation.navigate("CategoryList");
   };
 
   return (

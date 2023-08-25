@@ -1,14 +1,15 @@
-import Home from "../screens/home";
-import CreateTransaction from "../screens/createTransaction";
+import HomeScreen from "../screens/HomeScreen";
+import CreateTransaction from "../screens/CreateTransactionScreen";
 import { createStackNavigator } from "@react-navigation/stack";
-import CreateCategory from "../screens/createCategory";
-import Transaction from "./Transaction";
-import IconList from "./IconLists";
+import CreateCategory from "../screens/CreateCategoryScreen";
+import Transaction from "../components/TransactionDescription";
+import IconList from "../components/IconLists";
 import SigninScreen from "../screens/SigninScreen";
 import SignupScreen from "../screens/SignupScreen";
 import App from "../App";
-import { NavigationContainer } from "@react-navigation/native";
-import TabNavigation from "../navigation/TabNavigation";
+import { NavigationContainer, useIsFocused } from "@react-navigation/native";
+import TabNavigation from "./TabNavigation";
+import CategoryScreen from "../screens/CategoryScreen";
 
 const Stack = createStackNavigator();
 
@@ -18,7 +19,7 @@ const StackNavigator = () => {
       <Stack.Navigator initialRouteName="signin">
         <Stack.Screen
           name="Home"
-          component={Home}
+          component={HomeScreen}
           options={{
             title: "Good afternoon",
             headerShown: false,
@@ -29,6 +30,14 @@ const StackNavigator = () => {
           component={CreateTransaction}
           options={{
             title: "Add Transactions",
+            headerStyle: { backgroundColor: "#77cc74" },
+          }}
+        ></Stack.Screen>
+        <Stack.Screen
+          name="CategoryPage"
+          component={CategoryScreen}
+          options={{
+            title: "Category",
             headerStyle: { backgroundColor: "#77cc74" },
           }}
         ></Stack.Screen>

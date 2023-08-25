@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import IconButtonWithPlus from "../components/Button";
 import MonthList from "../components/MonthList";
 import Header from "../components/Header";
-import Transactions from "./Transactions";
+import Transactions from "../components/Transactions";
 import { getAllMonthsOfYear } from "../utils/AllMonthOfYear";
 import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
@@ -10,8 +10,10 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Animated } from "react-native";
 import TotalMoney from "../components/TotalMoney";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { api } from "../constants";
+import { getTokenData } from "../services/tokenService";
 
-const Home = ({ navigation }) => {
+const HomeScreen = ({ navigation }) => {
   const [currentMonthIndex, setCurrentMonthIndex] = useState();
   const [transactions, setTransactions] = useState([]);
   const [total, setTotal] = useState(0);
@@ -29,10 +31,10 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = AsyncStorage.getItem("token");
+        const token = await getTokenData();
         console.log("token", token);
         const response = await fetch(
-          `http://192.168.40.71:3000/api/transaction/total`,
+          `http://${api}:3000/api/transaction/total`,
           {
             method: "GET",
             headers: {
@@ -54,9 +56,9 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = AsyncStorage.getItem("token");
+        const token = await getTokenData();
         const response = await fetch(
-          `http://192.168.40.71:3000/api/transaction?year=${
+          `http://${api}:3000/api/transaction?year=${
             allMonths[currentMonthIndex]?.split(" ")[1]
           }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
           {
@@ -137,7 +139,7 @@ const Home = ({ navigation }) => {
     </View>
   );
 };
-export default Home;
+export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,

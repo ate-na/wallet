@@ -1,7 +1,7 @@
 import Icon from "react-native-vector-icons/FontAwesome";
-import Report from "../screens/Report";
-import Account from "../screens/account";
-import Home from "../screens/home";
+import Report from "../screens/ReportScreen";
+import Account from "../screens/AccountScreen";
+import Home from "../screens/HomeScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyleSheet } from "react-native";
 

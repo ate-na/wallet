@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { Alert } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { api } from "../constants";
+import { storeToeknData, storeUserData } from "../services/tokenService";
 
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -12,41 +14,44 @@ const SignupScreen = ({ navigation }) => {
 
   const handleSignUp = async () => {
     if (!email || !password) {
-      Alert.alert("Validation Error", "Please fill in all fields");
-      return;
+      return Alert.alert("Validation Error", "Please fill in all fields");
     }
 
     if (password !== confirmPassword) {
-      Alert.alert(
+      return Alert.alert(
         "Validation Error",
         "password and confirm password are not match"
       );
     }
 
     try {
-      const response = await fetch(
-        "http://192.168.40.71:3000/api/auth/signup",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            email,
-            password,
-            name,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        }
-      );
+      const response = await fetch(`http://${api}:3000/api/auth/signup`, {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+          name,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
       const res = await response.json();
       console.log("response is", res);
-      AsyncStorage.setItem("token", res.token);
-      AsyncStorage.setItem("user", res.user);
-      navigation.navigate("app");
-      //   navigation.navigate("signin");
+      if (res.status === 200 || res.status === 201) {
+        await storeToeknData(res.data.token);
+        await storeUserData(res.data.user);
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+        setName("");
+        navigation.navigate("app");
+      } else {
+        return Alert.alert("Validation Error", res.data);
+      }
     } catch (error) {
-      Alert.alert("Validation Error", error.message);
+      return Alert.alert("Validation Error", error.message);
     }
   };
 
