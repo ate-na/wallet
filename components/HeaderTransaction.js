@@ -10,17 +10,14 @@ const HeaderTransaction = ({ title, getBack, item }) => {
   const deleteTransaction = async () => {
     try {
       const token = await getTokenData();
-      const response = await fetch(
-        `http://${api}:3000/api/transaction/${item._id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${api}/api/transaction/${item._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const res = await response.json();
       getBack();
     } catch (error) {}

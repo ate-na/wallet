@@ -21,7 +21,7 @@ const CreateTransaction = ({ route, navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://${api}:3000/api/category`);
+        const response = await fetch(`${api}/api/category`);
         const jsonData = await response.json();
         setCategories(jsonData.data);
       } catch (error) {
@@ -42,7 +42,7 @@ const CreateTransaction = ({ route, navigation }) => {
     if (value && value > 0 && category._id) {
       const token = await getTokenData();
       console.log("tokenis", token);
-      const response = await fetch(`http://${api}:3000/api/transaction`, {
+      const response = await fetch(`${api}/api/transaction`, {
         method: "POST",
         body: JSON.stringify({
           category: category._id,
@@ -56,8 +56,15 @@ const CreateTransaction = ({ route, navigation }) => {
         },
       });
       const res = await response.json();
+      console.log("response", res);
+      setActionType("Expense");
+      setCategory({});
+      setShowCalculator(false);
+      setCategories([]);
+
+      navigation.navigate("Home", { money: value, category });
+      navigation.navigate("tab", {});
     }
-    navigation.navigate("Home", { money: value, category });
   };
 
   const categoryOnPressHandler = (item, showcalender) => {
@@ -87,12 +94,14 @@ const CreateTransaction = ({ route, navigation }) => {
           onActionChange={onActionChange.bind(null, "Income")}
         >
           Income
+          {console.log("actionType96", actionType)}
         </CategoryTabItem>
       </View>
       <View style={styles.container}>
         <Category
           onPress={categoryOnPressHandler}
           choosen={category}
+          actionType={actionType}
           categories={
             categories?.filter((e) =>
               isExpenseTabActive ? e.type === "Expense" : e.type === "Income"

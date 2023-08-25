@@ -15,7 +15,7 @@ const CategoryItem = ({ item, onPress, choosen }) => {
         color={"white"}
         size={27}
       />
-      <Text style={styles.categoryName}>{item.title}</Text>
+      <Text style={styles.categoryName}>{item?.title}</Text>
     </View>
   );
 };

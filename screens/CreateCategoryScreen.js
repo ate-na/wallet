@@ -28,14 +28,18 @@ const CreateCategory = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    console.log("paramsss", route?.params);
     setCategory(route?.params?.category || null);
-    if (route?.params?.category) {
+    if (route?.params?.category?.type) {
+      setType(route?.params?.category?.type);
+    }
+    if (route?.params?.isEdit) {
+      setIsEdit(true);
+    }
+    if (!!route?.params?.category?.title) {
       setIsEdit(true);
       setType(route?.params?.category?.type);
       setCategory(route?.params?.category?.title);
     }
-    console.log("route?.params?.item", route?.params?.item);
     setIcon(
       route?.params?.item?.item || route?.params?.category?.icon || "question"
     );
@@ -45,9 +49,14 @@ const CreateCategory = ({ route, navigation }) => {
   const submitHandlerBtn = async () => {
     let response;
     try {
-      if (isEdit) {
+      console.log({
+        title: category,
+        type: type,
+        icon,
+      });
+      if (isEdit && route?.params?.category?.title) {
         response = await fetch(
-          `http://${api}:3000/api/category/${route.params.category._id}`,
+          `${api}/api/category/${route.params.category._id}`,
           {
             method: "PATCH",
             body: JSON.stringify({
@@ -62,7 +71,12 @@ const CreateCategory = ({ route, navigation }) => {
           }
         );
       } else {
-        response = await fetch(`http://${api}:3000/api/category`, {
+        console.log("hiiiiiii", {
+          title: category,
+          type: type,
+          icon,
+        });
+        response = await fetch(`${api}/api/category`, {
           method: "POST",
           body: JSON.stringify({
             title: category,
@@ -76,11 +90,16 @@ const CreateCategory = ({ route, navigation }) => {
         });
       }
       const res = await response.json();
-
+      console.log("isEdit", isEdit);
+      console.log("condition", !isEdit ? "CategoryList" : "CategoryPage");
       navigation.navigate(!isEdit ? "CategoryList" : "CategoryPage", {
         category: res.data,
         isEdit,
       });
+      setCategory("");
+      setIcon("");
+      setIsEdit(false);
+      setType("Expense");
     } catch (error) {
       console.log("error", error);
     }

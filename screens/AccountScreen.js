@@ -91,12 +91,15 @@ const Account = ({ navigation }) => {
           Security
         </Text>
         <TouchableOpacity
-          style={{ paddingVertical: 15 }}
+          style={{ display: "flex", flexDirection: "row", paddingVertical: 15 }}
           onPress={() => {
             setModalVisible(true);
           }}
         >
-          <Text style={{ color: "white", fontSize: 15, marginHorizontal: 20 }}>
+          <View>
+            <Icon name="lock" color={"white"} size={23} />
+          </View>
+          <Text style={{ color: "white", fontSize: 15, marginHorizontal: 12 }}>
             Change Password
           </Text>
         </TouchableOpacity>

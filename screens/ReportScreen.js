@@ -38,7 +38,7 @@ const Report = () => {
       try {
         const token = await getTokenData();
         const response = await fetch(
-          `http://${api}:3000/api/transaction/chart/${param}?year=${
+          `${api}/api/transaction/chart/${param}?year=${
             allMonths[currentMonthIndex]?.split(" ")[1]
           }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
           {
@@ -65,7 +65,7 @@ const Report = () => {
       try {
         const token = await getTokenData();
         const response = await fetch(
-          `http://${api}:3000/api/transaction/total/report?year=${
+          `${api}/api/transaction/total/report?year=${
             allMonths[currentMonthIndex]?.split(" ")[1]
           }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
           {

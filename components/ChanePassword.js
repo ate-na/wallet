@@ -22,22 +22,18 @@ const ChangePassword = ({ closeModal }) => {
     const token = await getTokenData();
     const user = await getUserData();
 
-    const respose = await fetch(
-      `http://${api}:3000/api/auth/change-password/${user._id}`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          password: password,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const respose = await fetch(`${api}/api/auth/change-password/${user._id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        password: password,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const res = await respose.json();
-    console.log("res is", res);
     if (res.status === 200 || res.status === 201) {
       Alert.alert("Succesfully");
       setConfirmPassword("");

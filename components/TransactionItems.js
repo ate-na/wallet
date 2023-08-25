@@ -3,13 +3,13 @@ import IconCategory from "./IconCategory";
 
 const TransactionItem = ({ item, onPress }) => {
   const onPressTransactionItem = () => {
-    onPress(item)
-  }
+    onPress(item);
+  };
   return (
     <TouchableOpacity style={styles.container} onPress={onPressTransactionItem}>
-      <IconCategory name={item.category.icon} size={20} color={"white"} />
+      <IconCategory name={item?.category?.icon} size={20} color={"white"} />
       <View style={styles.category}>
-        <Text style={styles.categoryText}>{item.category.title}</Text>
+        <Text style={styles.categoryText}>{item?.category?.title}</Text>
       </View>
       <View style={styles.money}>
         <Text

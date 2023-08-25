@@ -27,10 +27,8 @@ const SigninScreen = ({ navigation }) => {
   }, [isFocused]);
 
   const handleSignIn = async () => {
-    console.log("condition", !email || !password);
     if (!email || !password || password.length < 8) {
       if (!email || !password) {
-        console.log("hhhhhhhhhhhhhhhhhhh");
         return Alert.alert(
           "Validation Error",
           "Please fill correct all fields"
@@ -42,7 +40,7 @@ const SigninScreen = ({ navigation }) => {
       // return;
     }
     try {
-      const response = await fetch(`http://${api}:3000/api/auth/signin`, {
+      const response = await fetch(`${api}/api/auth/signin`, {
         method: "POST",
         body: JSON.stringify({
           email: email,
@@ -54,8 +52,6 @@ const SigninScreen = ({ navigation }) => {
         },
       });
       const res = await response.json();
-      console.log("signiin", await getTokenData());
-      console.log("dataaaaaaaaaa", res);
       if (res.status === 200 || res.status === 201) {
         await storeToeknData(res.data.token);
         await storeUserData(res.data.user);
@@ -66,7 +62,6 @@ const SigninScreen = ({ navigation }) => {
         return Alert.alert("Validation Error", res.data);
       }
     } catch (error) {
-      console.log("errorrr", error.message);
       return Alert.alert("Validation Error", error.message);
     }
   };

@@ -5,6 +5,7 @@ const Category = ({
   route,
   categories,
   onPress,
+  actionType,
   choosen,
   navigation,
   isEdit = false,
@@ -17,7 +18,10 @@ const Category = ({
   };
   const addCategoryHandler = (item) => {
     onPress(item, false);
-    navigation.navigate("createCategory", isEdit ? { category: item } : {});
+    navigation.navigate("createCategory", {
+      category: { type: actionType },
+      isEdit: isEdit,
+    });
   };
 
   return (

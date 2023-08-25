@@ -32,6 +32,7 @@ const Transactions = ({ month, onPress, transactions }) => {
 
   return (
     <View>
+      {console.log("transactions", transactions)}
       {transactions.map((e) =>
         checkDay(e) ? (
           <View>

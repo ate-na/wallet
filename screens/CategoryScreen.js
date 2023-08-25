@@ -15,7 +15,6 @@ const CategoryPage = ({ route, navigation, setShowCaculatorHandler }) => {
   const onActionChange = (action) => setActionType(action);
 
   const categoryOnPressHandler = (item, showCalculator) => {
-    console.log("categoryOnPressHandler", item, showCalculator);
     setCategory(item);
     if (!isEdit) {
       setShowCaculatorHandler(showCalculator);
@@ -26,8 +25,7 @@ const CategoryPage = ({ route, navigation, setShowCaculatorHandler }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("paramsss", route.params.isEdit);
-        const response = await fetch(`http://${api}:3000/api/category`);
+        const response = await fetch(`${api}/api/category`);
         const jsonData = await response.json();
         setCategories(jsonData.data);
         setIsEdit(route.params.isEdit);
@@ -62,6 +60,7 @@ const CategoryPage = ({ route, navigation, setShowCaculatorHandler }) => {
         <Category
           onPress={categoryOnPressHandler}
           isEdit={isEdit}
+          actionType={actionType}
           choosen={category}
           categories={
             categories?.filter((e) =>

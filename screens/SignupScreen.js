@@ -25,7 +25,7 @@ const SignupScreen = ({ navigation }) => {
     }
 
     try {
-      const response = await fetch(`http://${api}:3000/api/auth/signup`, {
+      const response = await fetch(`${api}/api/auth/signup`, {
         method: "POST",
         body: JSON.stringify({
           email,
@@ -38,7 +38,6 @@ const SignupScreen = ({ navigation }) => {
         },
       });
       const res = await response.json();
-      console.log("response is", res);
       if (res.status === 200 || res.status === 201) {
         await storeToeknData(res.data.token);
         await storeUserData(res.data.user);

@@ -33,17 +33,14 @@ const HomeScreen = ({ navigation }) => {
       try {
         const token = await getTokenData();
         console.log("token", token);
-        const response = await fetch(
-          `http://${api}:3000/api/transaction/total`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${api}/api/transaction/total`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const jsonData = await response.json();
         setTotal(jsonData.data || 0);
       } catch (error) {
@@ -58,7 +55,7 @@ const HomeScreen = ({ navigation }) => {
       try {
         const token = await getTokenData();
         const response = await fetch(
-          `http://${api}:3000/api/transaction?year=${
+          `${api}/api/transaction?year=${
             allMonths[currentMonthIndex]?.split(" ")[1]
           }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
           {
