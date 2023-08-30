@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 
-const Calculator = ({ onSubmit }) => {
+const Calculator = ({ onSubmit, loading }) => {
   const [expression, setExpression] = useState("");
 
   const handleButtonPress = (value) => {
@@ -81,12 +82,14 @@ const Calculator = ({ onSubmit }) => {
           </TouchableOpacity>
         ))}
       </View>
-      <TouchableOpacity style={styles.buttonContainer}>
-        <Text
-          style={styles.buttonText}
-          onPress={/[+-]/.test(expression) ? handleCalculate : onSubmitHandler}
-        >
-          {/[+-]/.test(expression) ? "=" : "Done"}
+      <TouchableOpacity
+        onPress={/[+-]/.test(expression) ? handleCalculate : onSubmitHandler}
+        disabled={loading}
+        style={styles.buttonContainer}
+      >
+        <Text style={styles.buttonText}>
+          {loading && <ActivityIndicator color="#fff" />}
+          {!loading && (/[+-]/.test(expression) ? "=" : "Done")}
         </Text>
       </TouchableOpacity>
     </View>

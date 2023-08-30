@@ -8,15 +8,53 @@ import { getAllMonthsOfYear } from "../utils/AllMonthOfYear";
 import TotalReport from "../components/totalReport";
 import { api } from "../constants";
 import { getTokenData } from "../services/tokenService";
+import { useQuery } from "react-query";
+
+const fetchChartReportData = async (param, year, month) => {
+  const token = await getTokenData();
+  return fetch(
+    `${api}/api/transaction/chart/${param}?year=${year}&month=${year}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+    .then((data) => data.json())
+    .then(({ data }) => data);
+};
+
+const fetchTotal = async () => {
+  const token = await getTokenData();
+  return fetch(
+    `${api}/api/transaction/total/report?year=${
+      allMonths[currentMonthIndex]?.split(" ")[1]
+    }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+    .then((data) => data.json())
+    .then(({ data }) => data);
+};
 
 const Report = () => {
   const [currentMonthIndex, setCurrentMonthIndex] = useState();
-  const [chartDataExpense, setChartDataExpense] = useState([]);
-  const [chartDataIncome, setChartDataIncome] = useState([]);
   const [totalReport, setTotalReport] = useState([]);
 
   const isFocused = useIsFocused();
-  const allMonths = getAllMonthsOfYear();
+
+  const allMonths = useMemo(() => {
+    return getAllMonthsOfYear();
+  }, []);
 
   useEffect(() => {
     const month = new Date().toLocaleString("en-us", { month: "long" });
@@ -24,6 +62,35 @@ const Report = () => {
     const Index = allMonths.findIndex((x) => x === `${month} ${year}`);
     setCurrentMonthIndex(Index);
   }, []);
+
+  const selectedDate = useMemo(() => {
+    return {
+      year: allMonths[currentMonthIndex]?.split(" ")[1],
+      month: allMonths[currentMonthIndex]?.split(" ")[0],
+    };
+  }, [currentMonthIndex]);
+
+  const { data: chartDataIncome, isLoading: chartIncomeLoading } = useQuery(
+    [`report-chart-${"Income"}-${selectedDate.year}-${selectedDate.month}`],
+    fetchChartReportData.bind(
+      null,
+      "Income",
+      selectedDate.year,
+      selectedDate.month
+    ),
+    { placeholderData: [] }
+  );
+
+  const { data: chartDataExpense, isLoading: chartExpenseLoading } = useQuery(
+    [`report-chart-${"Expense"}-${selectedDate.year}-${selectedDate.month}`],
+    fetchChartReportData.bind(
+      null,
+      "Expense",
+      selectedDate.year,
+      selectedDate.month
+    ),
+    { placeholderData: [] }
+  );
 
   const handleNextMonth = () => {
     setCurrentMonthIndex((prevIndex) => prevIndex - 1);
@@ -33,60 +100,60 @@ const Report = () => {
     setCurrentMonthIndex((prevIndex) => prevIndex + 1);
   };
 
-  useEffect(() => {
-    const fetchData = async (param) => {
-      try {
-        const token = await getTokenData();
-        const response = await fetch(
-          `${api}/api/transaction/chart/${param}?year=${
-            allMonths[currentMonthIndex]?.split(" ")[1]
-          }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const jsonData = await response.json();
-        if (param === "Expense") {
-          setChartDataExpense(jsonData.data || []);
-        } else {
-          setChartDataIncome(jsonData.data || []);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  // useEffect(() => {
+  // const fetchData = async (param) => {
+  //   try {
+  //     const token = await getTokenData();
+  //     const response = await fetch(
+  //       `${api}/api/transaction/chart/${param}?year=${
+  //         allMonths[currentMonthIndex]?.split(" ")[1]
+  //       }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Accept: "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     const jsonData = await response.json();
+  //     if (param === "Expense") {
+  //       setChartDataExpense(jsonData.data || []);
+  //     } else {
+  //       setChartDataIncome(jsonData.data || []);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
 
-    const fetchTotal = async () => {
-      try {
-        const token = await getTokenData();
-        const response = await fetch(
-          `${api}/api/transaction/total/report?year=${
-            allMonths[currentMonthIndex]?.split(" ")[1]
-          }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const jsonData = await response.json();
-        setTotalReport(jsonData.data || []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData("Expense");
-    fetchData("Income");
-    fetchTotal();
-  }, [isFocused, currentMonthIndex]);
+  //   const fetchTotal = async () => {
+  //     try {
+  //       const token = await getTokenData();
+  //       const response = await fetch(
+  //         `${api}/api/transaction/total/report?year=${
+  //           allMonths[currentMonthIndex]?.split(" ")[1]
+  //         }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
+  //         {
+  //           method: "GET",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Accept: "application/json",
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //       );
+  //       const jsonData = await response.json();
+  //       setTotalReport(jsonData.data || []);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
+  //   fetchData("Expense");
+  //   fetchData("Income");
+  //   fetchTotal();
+  // }, [isFocused, currentMonthIndex]);
 
   return (
     <View style={styles.container}>

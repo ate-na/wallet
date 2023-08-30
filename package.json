@@ -5,6 +5,7 @@
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
+    "build": "expo build -p android",
     "ios": "expo start --ios",
     "web": "expo start --web"
   },
@@ -29,6 +30,7 @@
     "react-native-svg-charts": "^5.4.0",
     "react-native-vector-icons": "^10.0.0",
     "react-native-web": "~0.18.10",
+    "react-query": "^3.39.3",
     "react-redux": "^8.1.2",
     "redux": "^4.2.1"
   },

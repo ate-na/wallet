@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-const MonthList = ({ onPressNextMonth, onPressPreviousMonth, nextMonth, previousMonth, currentMonth }) => {
-
+const MonthList = ({
+  onPressNextMonth,
+  onPressPreviousMonth,
+  nextMonth,
+  previousMonth,
+  currentMonth,
+}) => {
   const handleNextMonth = () => {
-    onPressNextMonth()
+    onPressNextMonth();
   };
 
   const handlePreviousMonth = () => {
-    onPressPreviousMonth()
+    onPressPreviousMonth();
   };
-
-  // const currentMonth = allMonths[currentMonthIndex];
 
   return (
     <View style={styles.container}>

@@ -1,36 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
 import Category from "../components/Category";
 import Calculator from "../components/calculator";
 import CategoryTabItem from "../components/categoryTabItem";
 import { useIsFocused } from "@react-navigation/native";
 import { api } from "../constants";
-import {
-  getToeknData,
-  getTokenData,
-  getUserData,
-} from "../services/tokenService";
+import { getTokenData } from "../services/tokenService";
+import { useQuery } from "react-query";
 
-const CreateTransaction = ({ route, navigation }) => {
+const fetchCategory = () => {
+  return fetch(`${api}/api/category`)
+    .then((res) => res.json())
+    .then(({ data }) => data);
+};
+
+const CreateTransaction = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
   const [actionType, setActionType] = useState("Expense");
   const [category, setCategory] = useState({});
   const [showCalculator, setShowCalculator] = useState(false);
-  const [categories, setCategories] = useState([]);
   const isFocused = useIsFocused();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${api}/api/category`);
-        const jsonData = await response.json();
-        setCategories(jsonData.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, [isFocused]);
+  const { data: categories } = useQuery("category", fetchCategory, {
+    enabled: isFocused,
+    placeholderData: [],
+  });
 
   const onActionChange = (action) => setActionType(action);
 
@@ -40,8 +33,8 @@ const CreateTransaction = ({ route, navigation }) => {
 
   const onSubmitHandler = async (value) => {
     if (value && value > 0 && category._id) {
+      setLoading(true);
       const token = await getTokenData();
-      console.log("tokenis", token);
       const response = await fetch(`${api}/api/transaction`, {
         method: "POST",
         body: JSON.stringify({
@@ -55,14 +48,9 @@ const CreateTransaction = ({ route, navigation }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      const res = await response.json();
-      console.log("response", res);
-      setActionType("Expense");
-      setCategory({});
-      setShowCalculator(false);
-      setCategories([]);
-
-      navigation.navigate("Home", { money: value, category });
+      await response.json();
+      setLoading(false);
+      navigation.navigate("Home", {});
       navigation.navigate("tab", {});
     }
   };
@@ -72,13 +60,7 @@ const CreateTransaction = ({ route, navigation }) => {
     setShowCalculator(showcalender);
   };
 
-  const setShowCaculatorHandler = (showcalender) => {
-    setShowCalculator(showcalender);
-  };
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({ tabBarVisible: false });
-  }, [navigation]);
+  if (!isFocused) return <></>;
 
   return (
     <View style={styles.container}>
@@ -110,7 +92,9 @@ const CreateTransaction = ({ route, navigation }) => {
           navigation={navigation}
         />
       </View>
-      {showCalculator ? <Calculator onSubmit={onSubmitHandler} /> : null}
+      {showCalculator ? (
+        <Calculator loading={loading} onSubmit={onSubmitHandler} />
+      ) : null}
     </View>
   );
 };

@@ -1,25 +1,56 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import IconButtonWithPlus from "../components/Button";
 import MonthList from "../components/MonthList";
 import Header from "../components/Header";
 import Transactions from "../components/Transactions";
 import { getAllMonthsOfYear } from "../utils/AllMonthOfYear";
 import { useEffect, useState } from "react";
-import { useIsFocused } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
-import { Animated } from "react-native";
 import TotalMoney from "../components/TotalMoney";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { api } from "../constants";
 import { getTokenData } from "../services/tokenService";
+import { useQuery } from "react-query";
+import { useMemo } from "react";
+
+const fetchTotalTransaction = async () => {
+  const token = await getTokenData();
+  return fetch(`${api}/api/transaction/total`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((data) => data.json())
+    .then(({ data }) => data);
+};
+
+const fetchTransactions = async (year, month) => {
+  console.log("called");
+  const token = await getTokenData();
+  return fetch(`${api}/api/transaction?year=${year}&month=${month}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((data) => data.json())
+    .then(({ data }) => data);
+};
 
 const HomeScreen = ({ navigation }) => {
-  const [currentMonthIndex, setCurrentMonthIndex] = useState();
-  const [transactions, setTransactions] = useState([]);
-  const [total, setTotal] = useState(0);
-  const isFocused = useIsFocused();
+  const { data: transactionAmount, isLoading: transactionAmountLoading } =
+    useQuery("transaction-amount", fetchTotalTransaction, {
+      placeholderData: 0,
+    });
 
-  const allMonths = getAllMonthsOfYear();
+  const [currentMonthIndex, setCurrentMonthIndex] = useState();
+  const allMonths = useMemo(() => {
+    return getAllMonthsOfYear();
+  }, []);
 
   useEffect(() => {
     const month = new Date().toLocaleString("en-us", { month: "long" });
@@ -28,61 +59,18 @@ const HomeScreen = ({ navigation }) => {
     setCurrentMonthIndex(Index);
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = await getTokenData();
-        console.log("token", token);
-        const response = await fetch(`${api}/api/transaction/total`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const jsonData = await response.json();
-        setTotal(jsonData.data || 0);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+  const selectedDate = useMemo(() => {
+    return {
+      year: allMonths[currentMonthIndex]?.split(" ")[1],
+      month: allMonths[currentMonthIndex]?.split(" ")[0],
     };
-    fetchData();
-  }, [isFocused]);
+  }, [currentMonthIndex]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = await getTokenData();
-        const response = await fetch(
-          `${api}/api/transaction?year=${
-            allMonths[currentMonthIndex]?.split(" ")[1]
-          }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const jsonData = await response.json();
-        setTransactions(jsonData.data || []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, [isFocused, currentMonthIndex]);
-
-  const scrollY = new Animated.Value(0);
-
-  const monthListHeight = scrollY.interpolate({
-    inputRange: [0, 10], // Adjust the values based on your preference.
-    outputRange: [150, 100], // Adjust the heights as needed
-    extrapolate: "clamp",
-  });
+  const { data: transactionData, isLoading: transactionLoading } = useQuery(
+    [`transaction-${selectedDate.year}-${selectedDate.month}`],
+    fetchTransactions.bind(null, selectedDate.year, selectedDate.month),
+    { placeholderData: [] }
+  );
 
   const onPressTransactionItem = (item) => {
     navigation.navigate("Transaction", item);
@@ -102,7 +90,11 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Header greeting={"Good Morning"} name={"Guest"} total={total} />
+        <Header
+          greeting={"Good Morning"}
+          name={"Guest"}
+          total={transactionAmount}
+        />
         <View
           style={{
             paddingTop: 10,
@@ -111,7 +103,9 @@ const HomeScreen = ({ navigation }) => {
             justifyContent: "center",
           }}
         >
-          <TotalMoney money={total} />
+          <TotalMoney
+            money={transactionAmountLoading ? 0 : transactionAmount}
+          />
         </View>
         <MonthList
           onPressNextMonth={handleNextMonth}
@@ -123,7 +117,7 @@ const HomeScreen = ({ navigation }) => {
       </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Transactions
-          transactions={transactions}
+          transactions={transactionData}
           month={
             allMonths[currentMonthIndex]?.split(" ")[0]
               ? allMonths[currentMonthIndex]?.split(" ")[0]
