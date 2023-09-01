@@ -1,2 +1,2 @@
 // export const api = "https://wallet-node.iran.liara.run";
-export const api = `http://192.168.15.71:3000`;
+export const api = `http://192.168.71.71:3000`;

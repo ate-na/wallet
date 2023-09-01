@@ -1,16 +1,25 @@
 import { StyleSheet, View } from "react-native";
 import CategoryTabItem from "../components/categoryTabItem";
 import Category from "../components/Category";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { api } from "../constants";
 import { useIsFocused } from "@react-navigation/native";
 
-const CategoryPage = ({ route, navigation, setShowCaculatorHandler }) => {
+const fetchCategory = () => {
+  return fetch(`${api}/api/category`)
+    .then((res) => res.json())
+    .then(({ data }) => data);
+};
+
+const CategoryPage = ({ navigation, setShowCaculatorHandler }) => {
   const [actionType, setActionType] = useState("Expense");
-  const [categories, setCategories] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [category, setCategory] = useState();
   const isFocused = useIsFocused();
+  const { data: categories } = useQuery("category", fetchCategory, {
+    enabled: isFocused,
+    placeholderData: [],
+  });
 
   const onActionChange = (action) => setActionType(action);
 
@@ -19,23 +28,7 @@ const CategoryPage = ({ route, navigation, setShowCaculatorHandler }) => {
     if (!isEdit) {
       setShowCaculatorHandler(showCalculator);
     }
-    // setShowHandler(showCalculator);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${api}/api/category`);
-        const jsonData = await response.json();
-        setCategories(jsonData.data);
-        setIsEdit(route.params.isEdit);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, [isFocused]);
 
   const isExpenseTabActive = actionType === "Expense";
 

@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import CircleChart from "../components/CircleChart";
 import { useIsFocused } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 import MonthList from "../components/MonthList";
 import { getAllMonthsOfYear } from "../utils/AllMonthOfYear";
@@ -9,11 +9,12 @@ import TotalReport from "../components/totalReport";
 import { api } from "../constants";
 import { getTokenData } from "../services/tokenService";
 import { useQuery } from "react-query";
+import { ActivityIndicator } from "react-native";
 
 const fetchChartReportData = async (param, year, month) => {
   const token = await getTokenData();
   return fetch(
-    `${api}/api/transaction/chart/${param}?year=${year}&month=${year}`,
+    `${api}/api/transaction/chart/${param}?year=${year}&month=${month}`,
     {
       method: "GET",
       headers: {
@@ -26,13 +27,10 @@ const fetchChartReportData = async (param, year, month) => {
     .then((data) => data.json())
     .then(({ data }) => data);
 };
-
-const fetchTotal = async () => {
+const fetchTotalReport = async (year, month) => {
   const token = await getTokenData();
   return fetch(
-    `${api}/api/transaction/total/report?year=${
-      allMonths[currentMonthIndex]?.split(" ")[1]
-    }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
+    `${api}/api/transaction/total/report?year=${year}&month=${month}`,
     {
       method: "GET",
       headers: {
@@ -48,7 +46,6 @@ const fetchTotal = async () => {
 
 const Report = () => {
   const [currentMonthIndex, setCurrentMonthIndex] = useState();
-  const [totalReport, setTotalReport] = useState([]);
 
   const isFocused = useIsFocused();
 
@@ -78,7 +75,7 @@ const Report = () => {
       selectedDate.year,
       selectedDate.month
     ),
-    { placeholderData: [] }
+    { placeholderData: [], enabled: isFocused }
   );
 
   const { data: chartDataExpense, isLoading: chartExpenseLoading } = useQuery(
@@ -89,7 +86,13 @@ const Report = () => {
       selectedDate.year,
       selectedDate.month
     ),
-    { placeholderData: [] }
+    { placeholderData: [], enabled: isFocused }
+  );
+
+  const { data: ReprotData, isLoading: ReportDataLoding } = useQuery(
+    [`report-${selectedDate.year}-${selectedDate.month}`],
+    fetchTotalReport.bind(null, selectedDate.year, selectedDate.month),
+    { placeholderData: [], enabled: isFocused }
   );
 
   const handleNextMonth = () => {
@@ -99,61 +102,6 @@ const Report = () => {
   const handlePreviousMonth = () => {
     setCurrentMonthIndex((prevIndex) => prevIndex + 1);
   };
-
-  // useEffect(() => {
-  // const fetchData = async (param) => {
-  //   try {
-  //     const token = await getTokenData();
-  //     const response = await fetch(
-  //       `${api}/api/transaction/chart/${param}?year=${
-  //         allMonths[currentMonthIndex]?.split(" ")[1]
-  //       }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Accept: "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     const jsonData = await response.json();
-  //     if (param === "Expense") {
-  //       setChartDataExpense(jsonData.data || []);
-  //     } else {
-  //       setChartDataIncome(jsonData.data || []);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
-
-  //   const fetchTotal = async () => {
-  //     try {
-  //       const token = await getTokenData();
-  //       const response = await fetch(
-  //         `${api}/api/transaction/total/report?year=${
-  //           allMonths[currentMonthIndex]?.split(" ")[1]
-  //         }&month=${allMonths[currentMonthIndex]?.split(" ")[0]}`,
-  //         {
-  //           method: "GET",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Accept: "application/json",
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       );
-  //       const jsonData = await response.json();
-  //       setTotalReport(jsonData.data || []);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-  //   fetchData("Expense");
-  //   fetchData("Income");
-  //   fetchTotal();
-  // }, [isFocused, currentMonthIndex]);
 
   return (
     <View style={styles.container}>
@@ -166,21 +114,27 @@ const Report = () => {
       />
       <View style={styles.totalReport}>
         <TotalReport
-          title={totalReport[0]?.type || "Expense"}
-          amount={totalReport[0]?.amount * -1 || 0}
+          title={ReprotData[0]?.type || "Expense"}
+          amount={ReprotData[0]?.amount * -1 || 0}
         />
         <TotalReport
-          title={totalReport[1]?.type || "Income"}
-          amount={totalReport[1]?.amount || 0}
+          title={ReprotData[1]?.type || "Income"}
+          amount={ReprotData[1]?.amount || 0}
         />
       </View>
       <View style={styles.pieChart}>
         <Text style={styles.pieChartText}>Expense categories</Text>
-        <CircleChart chartData={chartDataExpense} />
+        {chartExpenseLoading && (
+          <ActivityIndicator color="#fff" style={{ height: 130 }} />
+        )}
+        {!chartExpenseLoading && <CircleChart chartData={chartDataExpense} />}
       </View>
       <View style={styles.pieChart}>
         <Text style={styles.pieChartText}>Income categories</Text>
-        <CircleChart chartData={chartDataIncome} />
+        {chartIncomeLoading && (
+          <ActivityIndicator color="#fff" style={{ height: 130 }} />
+        )}
+        {!chartIncomeLoading && <CircleChart chartData={chartDataIncome} />}
       </View>
     </View>
   );

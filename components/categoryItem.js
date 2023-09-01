@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import IconCategory from "./IconCategory";
 
 const CategoryItem = ({ item, onPress, choosen }) => {

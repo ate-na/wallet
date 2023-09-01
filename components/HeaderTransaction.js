@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Text } from "react-native";
 import { View } from "react-native";
 import { StyleSheet, TouchableOpacity } from "react-native";

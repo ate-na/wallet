@@ -76,7 +76,6 @@ const CreateTransaction = ({ navigation }) => {
           onActionChange={onActionChange.bind(null, "Income")}
         >
           Income
-          {console.log("actionType96", actionType)}
         </CategoryTabItem>
       </View>
       <View style={styles.container}>

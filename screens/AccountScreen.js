@@ -1,7 +1,6 @@
 import { StyleSheet, Text, Modal } from "react-native";
 import { View, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { clearData, getUserData } from "../services/tokenService";
 import { useEffect, useState } from "react";
 import ChangePassword from "../components/ChanePassword";
@@ -20,7 +19,6 @@ const Account = ({ navigation }) => {
   }, [user]);
 
   const onPresCategoriesHandler = () => {
-    console.log("onclick");
     navigation.navigate("CategoryPage", { isEdit: true });
   };
 
@@ -31,25 +29,6 @@ const Account = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* <Modal
-        visible={modalVisible}
-        animationType="slide"
-        onRequestClose={() => {
-          setModalVisible(false);
-        }}
-      > */}
-      {/* <View style={{ flex: 0.5 }}>
-          <View>
-            <Text>Hello World!</Text>
-            <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-              <Text>Hide Modal</Text>
-            </TouchableOpacity>
-          </View>
-        </View> */}
-      {/* <View>
-          <Text>Hello</Text>
-        </View> */}
-      {/* </Modal> */}
       <View style={styles.header}>
         <Text style={{ fontSize: 30, color: "orange", fontWeight: "bold" }}>
           Account
@@ -147,25 +126,6 @@ const Account = ({ navigation }) => {
           </View>
         </TouchableOpacity>
       </View>
-
-      {/* <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(false);
-        }}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <ChangePassword
-              closeModal={() => {
-                setModalVisible(false);
-              }}
-            />
-          </View>
-        </View>
-      </Modal> */}
       <ModalPage
         visible={modalVisible}
         onClose={() => {

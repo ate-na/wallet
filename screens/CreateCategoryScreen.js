@@ -45,15 +45,9 @@ const CreateCategory = ({ route, navigation }) => {
     );
   }, [route?.params]);
 
-  // Handle form submission here
   const submitHandlerBtn = async () => {
     let response;
     try {
-      console.log({
-        title: category,
-        type: type,
-        icon,
-      });
       if (isEdit && route?.params?.category?.title) {
         response = await fetch(
           `${api}/api/category/${route.params.category._id}`,
@@ -71,11 +65,6 @@ const CreateCategory = ({ route, navigation }) => {
           }
         );
       } else {
-        console.log("hiiiiiii", {
-          title: category,
-          type: type,
-          icon,
-        });
         response = await fetch(`${api}/api/category`, {
           method: "POST",
           body: JSON.stringify({
@@ -90,8 +79,6 @@ const CreateCategory = ({ route, navigation }) => {
         });
       }
       const res = await response.json();
-      console.log("isEdit", isEdit);
-      console.log("condition", !isEdit ? "CategoryList" : "CategoryPage");
       navigation.navigate(!isEdit ? "CategoryList" : "CategoryPage", {
         category: res.data,
         isEdit,
@@ -107,7 +94,6 @@ const CreateCategory = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Type */}
       <Text style={styles.label}>Type</Text>
       <RadioButton.Group
         onValueChange={handleRadioPress}
@@ -134,7 +120,6 @@ const CreateCategory = ({ route, navigation }) => {
         </View>
       </RadioButton.Group>
 
-      {/* Category */}
       <View style={styles.categoryContainer}>
         <Text style={styles.label}>Category</Text>
         <View style={styles.inputContainer}>
@@ -155,7 +140,6 @@ const CreateCategory = ({ route, navigation }) => {
         </View>
       </View>
 
-      {/* Save Button */}
       <TouchableOpacity
         style={styles.buttonContainer}
         onPress={submitHandlerBtn}

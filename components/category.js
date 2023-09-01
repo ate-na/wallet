@@ -2,7 +2,6 @@ import { View, StyleSheet } from "react-native";
 import CategoryItem from "./categoryItem";
 
 const Category = ({
-  route,
   categories,
   onPress,
   actionType,

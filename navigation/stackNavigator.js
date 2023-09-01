@@ -7,7 +7,7 @@ import IconList from "../components/IconLists";
 import SigninScreen from "../screens/SigninScreen";
 import SignupScreen from "../screens/SignupScreen";
 import App from "../App";
-import { NavigationContainer, useIsFocused } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import TabNavigation from "./TabNavigation";
 import CategoryScreen from "../screens/CategoryScreen";
 import { QueryClient, QueryClientProvider } from "react-query";

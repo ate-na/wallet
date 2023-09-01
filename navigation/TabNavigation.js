@@ -8,9 +8,6 @@ import { StyleSheet } from "react-native";
 const Tab = createBottomTabNavigator();
 
 const TabNavigation = () => {
-  {
-    // console.log("Ddddddddddddddddd");
-  }
   const iconHomeTab = (name) => {
     return <Icon name="exchange" size={name.size} color={name.color} />;
   };

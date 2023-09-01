@@ -1,10 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import TotalMoney from "./TotalMoney";
 
-const Header = ({ name, greeting, total }) => {
-
+const Header = ({ name }) => {
   const greetBasedOnTime = () => {
     const currentHour = new Date().getHours();
 
@@ -15,7 +13,7 @@ const Header = ({ name, greeting, total }) => {
     } else {
       return "Good Evening";
     }
-  }
+  };
   return (
     <View style={styles.main}>
       <View style={styles.container}>
@@ -25,7 +23,6 @@ const Header = ({ name, greeting, total }) => {
           <Text style={styles.userName}>{name}</Text>
         </View>
       </View>
-
     </View>
   );
 };
@@ -36,8 +33,6 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#333",
     display: "flex",
-
-
   },
   container: {
     flexDirection: "row",
@@ -60,7 +55,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     display: "flex",
     justifyContent: "center",
-  }
+  },
 });
 
 export default Header;
