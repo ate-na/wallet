@@ -27,7 +27,7 @@ exports.storeToeknData = async (value) => {
   }
 };
 
-exports.getUserData = async () => {
+export const getUserData = async () => {
   try {
     const jsonValue = await AsyncStorage.getItem(USER_KEY);
     return jsonValue != null ? JSON.parse(jsonValue) : null;
@@ -47,11 +47,21 @@ exports.getTokenData = async () => {
   }
 };
 
-exports.clearData = async () => {
+export const clearData = async () => {
   await AsyncStorage.clear(async (error) => {
     if (error) {
       Alert.alert("Error", error);
     }
   });
   return;
+};
+
+var Buffer = require("buffer/").Buffer;
+function atob(str) {
+  return Buffer.from(str, "base64").toString("binary");
+}
+
+exports.checkTokenExpirationMiddleware = async (token) => {
+  const parseJwt = JSON.parse(atob(token.split(".")[1]));
+  return parseJwt.exp * 1000 < Date.now();
 };

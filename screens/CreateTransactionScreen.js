@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import Category from "../components/Category";
+import Category from "../components/category";
 import Calculator from "../components/calculator";
 import CategoryTabItem from "../components/categoryTabItem";
 import { useIsFocused } from "@react-navigation/native";

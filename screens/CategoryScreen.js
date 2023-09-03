@@ -1,9 +1,10 @@
 import { StyleSheet, View } from "react-native";
 import CategoryTabItem from "../components/categoryTabItem";
-import Category from "../components/Category";
+import Category from "../components/category";
 import { useState } from "react";
 import { api } from "../constants";
 import { useIsFocused } from "@react-navigation/native";
+import { useQuery } from "react-query";
 
 const fetchCategory = () => {
   return fetch(`${api}/api/category`)
@@ -13,7 +14,7 @@ const fetchCategory = () => {
 
 const CategoryPage = ({ navigation, setShowCaculatorHandler }) => {
   const [actionType, setActionType] = useState("Expense");
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(true);
   const [category, setCategory] = useState();
   const isFocused = useIsFocused();
   const { data: categories } = useQuery("category", fetchCategory, {
@@ -25,9 +26,9 @@ const CategoryPage = ({ navigation, setShowCaculatorHandler }) => {
 
   const categoryOnPressHandler = (item, showCalculator) => {
     setCategory(item);
-    if (!isEdit) {
-      setShowCaculatorHandler(showCalculator);
-    }
+    // if (!isEdit) {
+    //   setShowCaculatorHandler(showCalculator);
+    // }
   };
 
   const isExpenseTabActive = actionType === "Expense";

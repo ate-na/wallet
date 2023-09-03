@@ -13,8 +13,12 @@ const SignupScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSignUp = async () => {
-    if (!email || !password) {
+    if (!email || !password || !confirmPassword) {
       return Alert.alert("Validation Error", "Please fill in all fields");
+    }
+
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/.test(email)) {
+      return Alert.alert("Validation Error", "Email is not correct");
     }
 
     if (password !== confirmPassword) {
@@ -45,7 +49,7 @@ const SignupScreen = ({ navigation }) => {
         setPassword("");
         setConfirmPassword("");
         setName("");
-        navigation.navigate("app");
+        navigation.navigate("tab");
       } else {
         return Alert.alert("Validation Error", res.data);
       }
@@ -62,6 +66,8 @@ const SignupScreen = ({ navigation }) => {
         value={email}
         onChangeText={setEmail}
         style={styles.input}
+        keyboardType="email-address"
+        autoCapitalize="none"
         placeholderTextColor={"orange"}
       />
       <TextInput

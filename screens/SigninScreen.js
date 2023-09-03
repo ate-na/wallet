@@ -7,6 +7,8 @@ import {
   getTokenData,
   storeToeknData,
   storeUserData,
+  checkTokenExpirationMiddleware,
+  clearData,
 } from "../services/tokenService";
 import { useIsFocused } from "@react-navigation/native";
 
@@ -18,7 +20,12 @@ const SigninScreen = ({ navigation }) => {
   useEffect(() => {
     const getToken = async () => {
       const token = await getTokenData();
-      if (typeof token === "string") {
+      if (!token) return;
+      const isExpire = await checkTokenExpirationMiddleware(token);
+      if (isExpire) {
+        await clearData();
+      }
+      if (typeof token === "string" && !isExpire) {
         navigation.navigate("tab");
       }
     };
@@ -39,6 +46,11 @@ const SigninScreen = ({ navigation }) => {
       // }
       // return;
     }
+
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/.test(email)) {
+      return Alert.alert("Validation Error", "Email is not correct");
+    }
+
     try {
       const response = await fetch(`${api}/api/auth/signin`, {
         method: "POST",

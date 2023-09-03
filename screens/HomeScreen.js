@@ -8,9 +8,10 @@ import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import TotalMoney from "../components/TotalMoney";
 import { api } from "../constants";
-import { getTokenData } from "../services/tokenService";
+import { getTokenData, getUserData } from "../services/tokenService";
 import { useQuery } from "react-query";
 import { useMemo } from "react";
+import { useIsFocused } from "@react-navigation/native";
 
 const fetchTotalTransaction = async () => {
   const token = await getTokenData();
@@ -27,7 +28,6 @@ const fetchTotalTransaction = async () => {
 };
 
 const fetchTransactions = async (year, month) => {
-  console.log("called");
   const token = await getTokenData();
   return fetch(`${api}/api/transaction?year=${year}&month=${month}`, {
     method: "GET",
@@ -42,10 +42,14 @@ const fetchTransactions = async (year, month) => {
 };
 
 const HomeScreen = ({ navigation }) => {
+  const [user, setUser] = useState({});
   const { data: transactionAmount, isLoading: transactionAmountLoading } =
     useQuery("transaction-amount", fetchTotalTransaction, {
       placeholderData: 0,
+      enabled: isFocused,
     });
+
+  const isFocused = useIsFocused();
 
   const [currentMonthIndex, setCurrentMonthIndex] = useState();
   const allMonths = useMemo(() => {
@@ -57,6 +61,7 @@ const HomeScreen = ({ navigation }) => {
     const year = new Date().getFullYear();
     const Index = allMonths.findIndex((x) => x === `${month} ${year}`);
     setCurrentMonthIndex(Index);
+    getUserData().then((res) => setUser(res));
   }, []);
 
   const selectedDate = useMemo(() => {
@@ -69,7 +74,7 @@ const HomeScreen = ({ navigation }) => {
   const { data: transactionData, isLoading: transactionLoading } = useQuery(
     [`transaction-${selectedDate.year}-${selectedDate.month}`],
     fetchTransactions.bind(null, selectedDate.year, selectedDate.month),
-    { placeholderData: [] }
+    { placeholderData: [], enabled: isFocused }
   );
 
   const onPressTransactionItem = (item) => {
@@ -92,7 +97,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.header}>
         <Header
           greeting={"Good Morning"}
-          name={"Guest"}
+          name={user?.name || "Guest"}
           total={transactionAmount}
         />
         <View
@@ -117,7 +122,7 @@ const HomeScreen = ({ navigation }) => {
       </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Transactions
-          transactions={transactionData}
+          transactions={transactionData || []}
           month={
             allMonths[currentMonthIndex]?.split(" ")[0]
               ? allMonths[currentMonthIndex]?.split(" ")[0]
