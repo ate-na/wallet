@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "atena",
-    "slug": "atena",
+    "name": "wallet",
+    "slug": "wallet",
+    "owner": "atena2280-2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -30,7 +29,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "1b5abfbb-f1ad-4dd9-9aef-c9091e094cc6"
+        "projectId": "6fa4a247-10cc-49ce-96a5-3407f4c9c911"
       }
     }
   }
