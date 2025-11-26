@@ -23,8 +23,8 @@ communicates through a REST API.
 
 ## Installation
 
-    git clone <YOUR_FRONTEND_REPO_URL>
-    cd wallet-frontend
+    git clone https://github.com/ate-na/wallet
+    cd wallet
     npm install
     npm start
 
